@@ -1,0 +1,38 @@
+
+
+.root{
+    -fx-background-size: cover;
+    -fx-background-color: #7696ff;
+}
+
+
+Button {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 25px;
+    -fx-border-radius: 10px;
+    -fx-border: 2px solid #FFFFFF;
+    -fx-background-color: #63B8EE,
+    linear-gradient(#31A357,  #1A8244);
+
+}
+Button:hover {
+    -fx-text-fill: white;
+    -fx-background-color: #468CCF,
+    linear-gradient( #19CF49,  #2A9914);
+}
+
+.label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
+
+
+
+
+
+
+
+
