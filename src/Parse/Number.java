@@ -10,7 +10,6 @@ public class Number {
         word = word.replaceAll(",","");
         if (Character.isDigit(firstChar) && word.matches("[0-9]+|[0-9]++\\b\\.\\b+[0-9]+")) {
             return true;
-
         }
         return false;
     }
