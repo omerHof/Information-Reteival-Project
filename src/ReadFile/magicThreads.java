@@ -12,10 +12,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class magicThreads extends Thread {
-    File file;
-    int indexDoc;
-    String path;
-    boolean stemming;
+    private File file;
+    private int indexDoc;
+    private String path;
+    private boolean stemming;
 
     public magicThreads(File file, int indexDoc,String path,boolean stemming){
         this.file = file;
@@ -23,6 +23,7 @@ public class magicThreads extends Thread {
         this.path = path;
         this.stemming = stemming;
     }
+
 
     public void run(){
         if (file.isDirectory()) {

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Application.DictionaryTable">
+   <children>
+      <TableView fx:id="tableView" layoutX="102.0" layoutY="42.0" prefHeight="429.0" prefWidth="495.0">
+        <columns>
+          <TableColumn prefWidth="251.20001983642578" text="C1" />
+          <TableColumn prefWidth="243.19992065429688" text="C2" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

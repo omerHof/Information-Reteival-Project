@@ -96,7 +96,7 @@ public class Dictionary {
                 } else {
                     //add to dictionary with: number of docs, file name, number of line in the doc
 
-                    if (Parser.getBigWordList().containsKey(previousWord) && Parser.getBigWordList().get(previousWord).size() == showsInCorpus) {
+                    if (Parser.getBigWordList().containsKey(previousWord) && Parser.getBigWordList().get(previousWord)== showsInCorpus) {
 
                         dictionary.put(previousWord.toUpperCase(), Ndocs + "-" + counterFile + "-" + pointerLine);
                         userDictionary.put(previousWord.toUpperCase(), showsInCorpus);
@@ -175,15 +175,15 @@ public class Dictionary {
             Map.Entry pair = (Map.Entry) it.next();
             pw.write(pair.getKey() + " " + pair.getValue() + "\r\n");
             Map.Entry pair1 = (Map.Entry) it1.next();
-            pw1.write(pair1.getKey() + " " + pair1.getValue() + "\r\n");
+            pw1.write(pair1.getKey() + "/" + pair1.getValue() + "\r\n");
         }
         pw.close();
         pw1.close();
 
 
 
-        sorted = new TreeMap<>(popularWordInDoc);
-        Set<Map.Entry<String, Integer>> mappings3 = sorted.entrySet();
+        TreeMap<String, Integer> sorted3 = new TreeMap<>(popularWordInDoc);
+        Set<Map.Entry<String, Integer>> mappings3 = sorted3.entrySet();
         TreeMap<String, Integer> sorted4 = new TreeMap<>(wordsInDoc);
         Set<Map.Entry<String, Integer>> mappings4 = sorted4.entrySet();
 

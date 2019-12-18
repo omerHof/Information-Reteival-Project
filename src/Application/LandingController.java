@@ -4,9 +4,14 @@ import ReadFile.ReadFileJsoupThreads;
 import invertedIndex.Dictionary;
 import invertedIndex.MergeSorter;
 import invertedIndex.SortedTablesThreads;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -38,6 +43,9 @@ public class LandingController extends Controller implements Initializable {
     @FXML
     private CheckBox checkBoxStemming;
 
+    @FXML
+    private  TableView<Map.Entry<String, Integer>> DictionaryTable;
+
     private boolean stemming;
     private ViewModel viewModel;
 
@@ -54,6 +62,7 @@ public class LandingController extends Controller implements Initializable {
         checkBoxStemming = new CheckBox();
         checkBoxStemming.setSelected(false);
         viewModel = new ViewModel();
+        DictionaryTable = new TableView<>();
     }
     public void setStemming(ActionEvent actionEvent) throws IOException {
         if (checkBoxStemming.isSelected()){
@@ -101,9 +110,18 @@ public class LandingController extends Controller implements Initializable {
         }else{
             stemming = false;
         }
-
+        long startTime = System.nanoTime();
         viewModel.excute(textFieldCorpus.getText(),stemming, textFieldPosting.getText());
-
+        long endTime = System.nanoTime();
+        long timeElapsed = (endTime - startTime)/1000000000;
+        int numberOfTerms = viewModel.getUserDictionary().size();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText("Dictionary created successfully!");
+        alert.setContentText("Total indexed documents: "+viewModel.numberOfDocsThatIndexed(textFieldPosting.getText(),stemming)+" documents \r\n"+
+        "Total terms in corpus: "+numberOfTerms+ " terms. \r\n"+
+        "Total Total processing time: "+timeElapsed+ " seconds.");
+        alert.showAndWait();
     }
 
     private boolean checkLocation() {
@@ -150,51 +168,38 @@ public class LandingController extends Controller implements Initializable {
 
     public void showDictionaryButtonPressed(ActionEvent actionEvent) throws IOException {
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Dictionary");
-        alert.setHeaderText("List of Terms and appearances in the corpus");
+        Map <String, Integer> userDictionary;
 
-
-// Create expandable Exception.
-        StringWriter sw = new StringWriter();
-        ArrayList<String> dictionary = viewModel.getUserDictionaryInArray();
-        String dictionaryOutput = "";
-
-        /*
-        for(Map.Entry<String,Integer> entry : dictionary.entrySet()) {
-            String key = entry.getKey();
-            Integer value = entry.getValue();
-
-            dictionaryOutput += (key + " => " + value) + System.lineSeparator();
+        userDictionary = viewModel.getUserDictionary();
+        if (userDictionary==null|| userDictionary.isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Look, an Error Dialog");
+            alert.setContentText("Ooops, there is no dictionary!");
+            alert.showAndWait();
+        }else{
+            showDictionary(userDictionary);
         }
+    }
 
-         */
-        for(String line:dictionary){
-            dictionaryOutput += line + System.lineSeparator();
-        }
+    private void showDictionary(Map<String, Integer> userDictionary) throws IOException {
+        TableColumn<Map.Entry<String,Integer>,String> termColumn = new TableColumn<>("Term");
+        termColumn.setCellValueFactory(p->new SimpleStringProperty(p.getValue().getKey()));
 
-        Label label = new Label("The exception stacktrace was:");
+        TableColumn<Map.Entry<String,Integer>,String> tfCol = new TableColumn<>("Total terms in corpus");
+        tfCol.setCellValueFactory(p->new SimpleStringProperty(String.valueOf(p.getValue().getValue())));
 
-        TextArea textArea = new TextArea(dictionaryOutput);
-        textArea.setEditable(false);
-        textArea.setWrapText(true);
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        Parent root = fxmlLoader.load(getClass().getResource("/Application/Dictionary.fxml").openStream());
+        TableView<Map.Entry<String,Integer>> tableView = ((DictionaryTable)fxmlLoader.getController()).getTableView();
+        tableView.setItems(FXCollections.observableArrayList(userDictionary.entrySet()));
+        tableView.getColumns().setAll(termColumn,tfCol);
 
-        textArea.setMaxWidth(Double.MAX_VALUE);
-        textArea.setMaxHeight(Double.MAX_VALUE);
-        GridPane.setVgrow(textArea, Priority.ALWAYS);
-        GridPane.setHgrow(textArea, Priority.ALWAYS);
-
-        GridPane expContent = new GridPane();
-        expContent.setMaxWidth(Double.MAX_VALUE);
-        expContent.add(label, 0, 0);
-        expContent.add(textArea, 0, 1);
-
-// Set expandable Exception into the dialog pane.
-        alert.getDialogPane().setExpandableContent(expContent);
-
-        alert.showAndWait();
-
-
+        Stage stage = new Stage();
+        stage.setTitle("Dictionary");
+        stage.setScene(new Scene(root,700,500));
+        Main.setStage(stage);
+        stage.show();
     }
 
 
@@ -202,11 +207,22 @@ public class LandingController extends Controller implements Initializable {
         if (!checkLocation()){
             return;
         }
-        viewModel.load(textFieldPosting.getText(),stemming);
+
+        if (viewModel.load(textFieldPosting.getText(),stemming)){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("load completed successfully!");
+            alert.showAndWait();
+        }else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Look, an Error Dialog");
+            alert.setContentText("Ooops, there is no dictionary!");
+            alert.showAndWait();
+        }
+
     }
-
-
-
 
     protected void closeProgram() {
         Stage s = Main.getStage();
@@ -218,5 +234,4 @@ public class LandingController extends Controller implements Initializable {
             s.close();
         }
     }
-
 }

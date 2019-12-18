@@ -29,15 +29,10 @@ public class Main extends Application {
         primaryStage.setTitle("INFORMATION RETRIEVAL PROJECT 2019");
         Parent root = fxmlLoader.load(getClass().getResource("/Application/Landing.fxml").openStream());
         Scene scene = new Scene(root, 856, 532);
-        scene.getStylesheets().add(getClass().getResource("/Application/Landing.css").toExternalForm());
         primaryStage.setScene(scene);
         LandingController lc = fxmlLoader.getController();
 
         primaryStage.show();
-
-
-
-
     }
 
 

@@ -31,8 +31,6 @@ public class ReadFileJsoupThreads extends Thread implements ReadFileMethods {
     private String pathForPosting;
     private String pathForPrePosting;
     private String pathForDicMetadata;
-    private Dictionary dictionary;
-    private MergeSorter merge;
     private String pathToReturn;
 
     private ArrayList<Integer> docIndexer;
@@ -50,7 +48,6 @@ public class ReadFileJsoupThreads extends Thread implements ReadFileMethods {
         this.pathForPosting = pathForPosting;
         this.stemming = stemming;
         createFolders();
-        this.merge = new MergeSorter(1,pathForPrePosting);
         this.docIndexer = new ArrayList<>();
         this.threadList = new ArrayList<>();
     }

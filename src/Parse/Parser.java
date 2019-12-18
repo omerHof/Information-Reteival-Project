@@ -27,7 +27,7 @@ public class Parser {
     private HashMap<String,Integer> wordsList;
     private HashMap<String,Integer> stemmingList;
     private static HashMap<String,ArrayList<Integer>> entities = new HashMap<>();
-    private static HashMap<String,ArrayList<Integer>> bigWordList = new HashMap<>();
+    private static HashMap<String,Integer> bigWordList = new HashMap<>();
     private SortedTablesThreads sortedTablesThreads;
     private SortedTables step1;
     private Number number;
@@ -64,7 +64,7 @@ public class Parser {
     public void parse() throws IOException {
 
         //remove dots and commas
-        doc = doc.replaceAll("\\.{2,}|\\/|\\,+|\\s\\-+|\\'+|\\#+|\\&+|\\,\\s|\\?+|\\!+|\\*+\\++|\\.,|\\)|\\(|\\-{2,}|\\:|\\;|\\]|\\[|[\"]|\\W\\bs\\b|[a-zA-Z]+\\s\\bpercent\\b|[a-zA-Z]+\\s\\bpercentage\\b", " ");
+        doc = doc.replaceAll("[^ -~]|\\.{2,}|\\/|\\,+|\\s\\-+|\\'+|\\#+|\\&+|\\,\\s|\\?+|\\!+|\\*+\\++|\\.,|\\)|\\(|\\-{2,}|\\:|\\;|\\]|\\[|[\"]|\\W\\bs\\b|[a-zA-Z]+\\s\\bpercent\\b|[a-zA-Z]+\\s\\bpercentage\\b", " ");
 
         //entity and date removal
         doc = addToEntity();
@@ -194,8 +194,8 @@ public class Parser {
         //if the word is (Captial letter at the beginning)
         if (word.charAt(0)=='('){
             word = word.replaceAll("\\(|\\)","");
-            addToStaticList(word,bigWordList);
-
+            addToBigList(word,bigWordList);
+            insertToWordsList(word.toLowerCase(),indexInText);
          //percent word
         }else if(word.length()>1&&word.charAt(word.length()-1)=='*'&&word.charAt(word.length()-2)=='*'){
             word = word.substring(0, word.length() - 2);
@@ -321,6 +321,19 @@ public class Parser {
     }
 
 
+    /**
+     * sub function of add to word that adds the word to word list
+     * @param word - a string that represents an word.
+     */
+    private void addToBigList(String word,HashMap<String,Integer> list ) {
+        if (list.containsKey(word)){
+            list.put(word,list.get(word)+1);
+        }else {
+            list.put(word,1);
+        }
+    }
+
+
     private boolean isUpperCase(int i, ArrayList<String> allWords ){
         if (i<allWords.size()&& Character.isUpperCase(allWords.get(i).charAt(0))){
             return true;
@@ -430,7 +443,7 @@ public class Parser {
         return entities;
     }
 
-    public static HashMap<String, ArrayList<Integer>> getBigWordList() {
+    public static HashMap<String, Integer> getBigWordList() {
         return bigWordList;
     }
 }

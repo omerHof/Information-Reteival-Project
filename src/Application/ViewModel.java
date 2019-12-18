@@ -82,7 +82,7 @@ public class ViewModel {
         return userDictionary;
     }
 
-    public void load(String text, boolean stemming) {
+    public boolean load(String text, boolean stemming) {
         if (stemming) {
             File file = new File(text + "/postingStemming/Dictionary Metadata/termsInDic.txt");
             readFile(file);
@@ -90,6 +90,33 @@ public class ViewModel {
             File file = new File(text + "/postingWithoutStemming/Dictionary Metadata/termsInDic.txt");
             readFile(file);
         }
+        return (!this.userDictionary.isEmpty());
+    }
+
+    public int numberOfDocsThatIndexed(String text, boolean stemming){
+        if (stemming) {
+            File file = new File(text + "/postingStemming/Dictionary Metadata/termsInDoc.txt");
+            return checkDocIndexed(file);
+        } else {
+            File file = new File(text + "/postingWithoutStemming/Dictionary Metadata/termsInDoc.txt");
+            return checkDocIndexed(file);
+        }
+    }
+
+    private int checkDocIndexed(File file) {
+        int numOfdocs = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            while (true) {
+                String line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                numOfdocs++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return numOfdocs;
     }
 
     public ArrayList<String> getUserDictionaryInArray () {
@@ -97,13 +124,17 @@ public class ViewModel {
     }
 
     public void readFile (File file){
+        String[] term = new String[2];
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             while (true) {
                 String line = reader.readLine();
                 if (line == null) {
                     break;
                 }
-                this.userDictionaryInArray.add(line);
+                term = line.split("\\/");
+                int appears = Integer.parseInt(term[1]);
+                this.userDictionary.put(term[0],appears);
+                //this.userDictionaryInArray.add(line);
             }
         } catch (IOException e) {
             e.printStackTrace();
