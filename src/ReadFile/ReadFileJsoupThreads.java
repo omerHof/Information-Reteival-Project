@@ -10,8 +10,10 @@ import org.jsoup.select.Elements;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -42,17 +44,38 @@ public class ReadFileJsoupThreads extends Thread implements ReadFileMethods {
      *
      * @param pathForData
      */
-    public ReadFileJsoupThreads(String pathForData, boolean stemming, String pathForPosting) {
+    public ReadFileJsoupThreads(String pathForData, boolean stemming, String pathForPosting) throws IOException {
         this.folders = new File(pathForData + "\\tests").listFiles();
         this.pathForData = pathForData;
         this.pathForPosting = pathForPosting;
         this.stemming = stemming;
+        deleteFolders();
         createFolders();
         this.docIndexer = new ArrayList<>();
         this.threadList = new ArrayList<>();
     }
 
-    private void createFolders() {
+    private void deleteFolders() throws IOException {
+        if (stemming) {
+            deleteFolderHelper("Stemming");
+            deleteFolderHelper(this.pathForPosting + "\\postingStemming");
+        } else {
+            deleteFolderHelper("withoutStemming");
+            deleteFolderHelper(this.pathForPosting + "\\postingwithoutStemming");
+        }
+    }
+
+    private void deleteFolderHelper(String pathToDelete) throws IOException {
+        if (validFolder(pathToDelete)){
+            Path path = Paths.get(pathToDelete);
+            Files.walk(path)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+        }
+    }
+
+    private void createFolders() throws IOException {
         File f = new File(pathForData);
         f.mkdir();
         if (stemming){
@@ -112,5 +135,13 @@ public class ReadFileJsoupThreads extends Thread implements ReadFileMethods {
         List<Future<Object>> answers = threadPool.invokeAll(todo);
         threadPool.shutdown();
         return pathToReturn;
+    }
+
+    private boolean validFolder(String folderLocation) {
+        File f = new File(folderLocation);
+        if (f.exists() && f.isDirectory()) {
+            return true;
+        }
+        return false;
     }
 }

@@ -3,6 +3,7 @@ package Application;
 import ReadFile.ReadFileJsoupThreads;
 import invertedIndex.Dictionary;
 import invertedIndex.MergeSorter;
+import invertedIndex.SortedTables;
 import invertedIndex.SortedTablesThreads;
 
 import java.io.BufferedReader;
@@ -21,11 +22,9 @@ public class ViewModel {
 
     boolean stemming;
     TreeMap<String, Integer> userDictionary;
-    ArrayList<String> userDictionaryInArray;
 
     public ViewModel() {
         this.userDictionary = new TreeMap<>();
-        this.userDictionaryInArray = new ArrayList<>();
     }
 
     public void excute(String input, boolean stemming, String output) throws IOException, InterruptedException {
@@ -70,12 +69,14 @@ public class ViewModel {
 
         merge.startMergingfiles(listOfFiles.length);
         System.out.println("finish merge!----------------");
+
         listOfFiles = folder.listFiles();
         String pathForDicPosting = pathForPosting + "\\posting";
         String pathForDicMetadata = pathForPosting + "\\Dictionary Metadata";
         Dictionary dictionary = new Dictionary(listOfFiles[0], pathForDicPosting, pathForDicMetadata);
         dictionary.create();
         this.userDictionary = dictionary.saveInformation();
+        SortedTablesThreads.setTableNum(0);
     }
 
     public TreeMap<String, Integer> getUserDictionary() {
@@ -84,11 +85,17 @@ public class ViewModel {
 
     public boolean load(String text, boolean stemming) {
         if (stemming) {
-            File file = new File(text + "/postingStemming/Dictionary Metadata/termsInDic.txt");
-            readFile(file);
+            String path = text + "/postingStemming/Dictionary Metadata/termsInDic.txt";
+            if (validFolder(path)){
+                File file = new File(path);
+                readFile(file);
+            }
         } else {
-            File file = new File(text + "/postingWithoutStemming/Dictionary Metadata/termsInDic.txt");
-            readFile(file);
+            String path =text + "/postingWithoutStemming/Dictionary Metadata/termsInDic.txt";
+            if (validFolder(path)){
+                File file = new File(path);
+                readFile(file);
+            }
         }
         return (!this.userDictionary.isEmpty());
     }
@@ -119,10 +126,6 @@ public class ViewModel {
         return numOfdocs;
     }
 
-    public ArrayList<String> getUserDictionaryInArray () {
-        return userDictionaryInArray;
-    }
-
     public void readFile (File file){
         String[] term = new String[2];
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -139,6 +142,14 @@ public class ViewModel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean validFolder(String folderLocation) {
+        File f = new File(folderLocation);
+        if (f.exists() && f.isDirectory()) {
+            return true;
+        }
+        return false;
     }
 }
 

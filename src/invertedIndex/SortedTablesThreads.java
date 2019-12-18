@@ -90,4 +90,8 @@ public class SortedTablesThreads {
         }
         writer.close();
     }
+
+    public static void setTableNum(int tableNum) {
+        SortedTablesThreads.tableNum = tableNum;
+    }
 }

@@ -42,10 +42,6 @@ public class LandingController extends Controller implements Initializable {
 
     @FXML
     private CheckBox checkBoxStemming;
-
-    @FXML
-    private  TableView<Map.Entry<String, Integer>> DictionaryTable;
-
     private boolean stemming;
     private ViewModel viewModel;
 
@@ -62,7 +58,6 @@ public class LandingController extends Controller implements Initializable {
         checkBoxStemming = new CheckBox();
         checkBoxStemming.setSelected(false);
         viewModel = new ViewModel();
-        DictionaryTable = new TableView<>();
     }
     public void setStemming(ActionEvent actionEvent) throws IOException {
         if (checkBoxStemming.isSelected()){
@@ -125,7 +120,7 @@ public class LandingController extends Controller implements Initializable {
     }
 
     private boolean checkLocation() {
-        if (!validFolder(textFieldCorpus.getText())){
+        if (!viewModel.validFolder(textFieldCorpus.getText())){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
             alert.setHeaderText("Look, an Error Dialog");
@@ -133,24 +128,19 @@ public class LandingController extends Controller implements Initializable {
             alert.showAndWait();
             return false;
         }
-        if (!validFolder(textFieldPosting.getText())){
+        if (!viewModel.validFolder(textFieldPosting.getText())){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
             alert.setHeaderText("Look, an Error Dialog");
-            alert.setContentText("Ooops, there was an error! You didn't enter data folder location");
+            alert.setContentText("Ooops, there was an error! You didn't enter posting folder location");
             alert.showAndWait();
             return false;
         }
+
+
         return true;
     }
 
-    private boolean validFolder(String folderLocation) {
-        File f = new File(folderLocation);
-        if (f.exists() && f.isDirectory()) {
-            return true;
-        }
-        return false;
-    }
 
     public void resetButtonPressed(ActionEvent actionEvent) throws IOException {
         if (!checkLocation()){
@@ -183,11 +173,13 @@ public class LandingController extends Controller implements Initializable {
     }
 
     private void showDictionary(Map<String, Integer> userDictionary) throws IOException {
-        TableColumn<Map.Entry<String,Integer>,String> termColumn = new TableColumn<>("Term");
-        termColumn.setCellValueFactory(p->new SimpleStringProperty(p.getValue().getKey()));
+
 
         TableColumn<Map.Entry<String,Integer>,String> tfCol = new TableColumn<>("Total terms in corpus");
         tfCol.setCellValueFactory(p->new SimpleStringProperty(String.valueOf(p.getValue().getValue())));
+
+        TableColumn<Map.Entry<String,Integer>,String> termColumn = new TableColumn<>("Term");
+        termColumn.setCellValueFactory(p->new SimpleStringProperty(p.getValue().getKey()));
 
         FXMLLoader fxmlLoader = new FXMLLoader();
         Parent root = fxmlLoader.load(getClass().getResource("/Application/Dictionary.fxml").openStream());
