@@ -86,13 +86,13 @@ public class ViewModel {
     public boolean load(String text, boolean stemming) {
         if (stemming) {
             String path = text + "/postingStemming/Dictionary Metadata/termsInDic.txt";
-            if (validFolder(path)){
+            if (validFile(path)){
                 File file = new File(path);
                 readFile(file);
             }
         } else {
             String path =text + "/postingWithoutStemming/Dictionary Metadata/termsInDic.txt";
-            if (validFolder(path)){
+            if (validFile(path)){
                 File file = new File(path);
                 readFile(file);
             }
@@ -147,6 +147,14 @@ public class ViewModel {
     public boolean validFolder(String folderLocation) {
         File f = new File(folderLocation);
         if (f.exists() && f.isDirectory()) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean validFile(String folderLocation) {
+        File f = new File(folderLocation);
+        if (f.exists()) {
             return true;
         }
         return false;
