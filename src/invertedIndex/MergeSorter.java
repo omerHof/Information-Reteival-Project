@@ -62,7 +62,6 @@ public class MergeSorter extends Thread {
             }
         }
     }
-
     /**
      * this function merge 2 files
      */
@@ -211,10 +210,8 @@ public class MergeSorter extends Thread {
             e.printStackTrace();
         }
     }
-
     /**
      * this function get a split line and find the word inside
-     *
      * @param line
      * @return the word
      */

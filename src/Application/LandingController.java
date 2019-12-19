@@ -18,9 +18,10 @@ import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-
-public class LandingController extends Controller implements Initializable {
-
+/**
+ * this class represent the buttons in the menu
+ */
+public class LandingController implements Initializable {
 
     @FXML
     private TextField textFieldCorpus;
@@ -47,6 +48,12 @@ public class LandingController extends Controller implements Initializable {
         checkBoxStemming.setSelected(false);
         viewModel = new ViewModel();
     }
+
+    /**
+     * this function change the stemming value by the user choise
+     * @param actionEvent
+     * @throws IOException
+     */
     public void setStemming(ActionEvent actionEvent) throws IOException {
         if (checkBoxStemming.isSelected()){
             checkBoxStemming.setSelected(false);
@@ -57,7 +64,11 @@ public class LandingController extends Controller implements Initializable {
         }
     }
 
-
+    /**
+     * this function help to search the data folder
+     * @param actionEvent
+     * @throws IOException
+     */
     public void browseCorpusFolderPressed(ActionEvent actionEvent) throws IOException {
         final DirectoryChooser chooser = new DirectoryChooser();
         File file = chooser.showDialog(Main.getStage());
@@ -65,10 +76,13 @@ public class LandingController extends Controller implements Initializable {
         if (file!=null){
             textFieldCorpus.setText(file.getAbsolutePath());
         }
-
-
     }
 
+    /**
+     * this function help to search the folder for the posting files
+     * @param actionEvent
+     * @throws IOException
+     */
     public void browsePostingFolderPressed(ActionEvent actionEvent) throws IOException {
         final DirectoryChooser chooser = new DirectoryChooser();
         File file = chooser.showDialog(Main.getStage());
@@ -76,28 +90,31 @@ public class LandingController extends Controller implements Initializable {
         if (file!=null){
             textFieldPosting.setText(file.getAbsolutePath());
         }
-
     }
 
+    /**
+     * this function execute the engine and create all the files
+     * @param actionEvent
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void excuteButtonPressed(ActionEvent actionEvent) throws IOException, InterruptedException {
-
         if (!checkLocation()){
             return;
         }
-
-
-
-
         if (checkBoxStemming.isSelected()){
             stemming = true;
-        }else{
+        }
+        else{
             stemming = false;
         }
         long startTime = System.nanoTime();
+        //call to viewModel.execute
         viewModel.excute(textFieldCorpus.getText(),stemming, textFieldPosting.getText());
         long endTime = System.nanoTime();
         long timeElapsed = (endTime - startTime)/1000000000;
         int numberOfTerms = viewModel.getUserDictionary().size();
+
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Information Dialog");
         alert.setHeaderText("Dictionary created successfully!");
@@ -107,7 +124,12 @@ public class LandingController extends Controller implements Initializable {
         alert.showAndWait();
     }
 
+    /**
+     * check if the location is valid and write a massage
+     * @return true/false
+     */
     private boolean checkLocation() {
+        //if the data folder path is invalid
         if (!viewModel.validFolder(textFieldCorpus.getText())){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
@@ -116,6 +138,7 @@ public class LandingController extends Controller implements Initializable {
             alert.showAndWait();
             return false;
         }
+        //if the posting folder path is invalid
         if (!viewModel.validFolder(textFieldPosting.getText())){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
@@ -124,17 +147,19 @@ public class LandingController extends Controller implements Initializable {
             alert.showAndWait();
             return false;
         }
-
-
+        //the paths are valid
         return true;
     }
 
-
+    /**
+     * this function reset the match folder (Stemming/without Stemming)
+     * @param actionEvent
+     * @throws IOException
+     */
     public void resetButtonPressed(ActionEvent actionEvent) throws IOException {
         if (!checkLocation()){
             return;
         }
-
         if (viewModel.reset(textFieldPosting.getText(),stemming)){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
@@ -148,16 +173,18 @@ public class LandingController extends Controller implements Initializable {
             alert.setContentText("Ooops, there is no folder to delete!");
             alert.showAndWait();
         }
-
-
-
     }
 
+    /**
+     * this function present the Dictionary by using dictionaryTableShow
+     * @param actionEvent
+     * @throws IOException
+     */
     public void showDictionaryButtonPressed(ActionEvent actionEvent) throws IOException {
 
         Map <String, Integer> userDictionary;
-
         userDictionary = viewModel.getUserDictionary();
+        //if there isn't a Dictionary to show -> write a massage
         if (userDictionary==null|| userDictionary.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
@@ -169,6 +196,11 @@ public class LandingController extends Controller implements Initializable {
         }
     }
 
+    /**
+     * the actual function who present the Dictionary by using the class DictionaryToShow
+     * @param userDictionary
+     * @throws IOException
+     */
     private void dictionaryTableShow(Map<String, Integer> userDictionary) throws IOException {
 
         TableColumn<Map.Entry<String,Integer>,String> termColumn = new TableColumn<>("Term");
@@ -190,41 +222,30 @@ public class LandingController extends Controller implements Initializable {
         stage.show();
     }
 
-
+    /**
+     * this function load the Dictionary from the disk to the user
+     * @param actionEvent
+     * @throws IOException
+     */
     public void LoadDicFromDiscButtonPressed(ActionEvent actionEvent) throws IOException {
         if (!checkLocation()){
             return;
         }
-
+        //if the load successful
         if (viewModel.load(textFieldPosting.getText(),stemming)){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText(null);
             alert.setContentText("load completed successfully!");
             alert.showAndWait();
-        }else {
+            //if the load don't successful
+        }
+        else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
             alert.setHeaderText("Look, an Error Dialog");
             alert.setContentText("Ooops, there is no dictionary!");
             alert.showAndWait();
-        }
-
-    }
-
-    public void sorted(ActionEvent actionEvent) throws IOException {
-        viewModel.sortByValue();
-
-    }
-
-    protected void closeProgram() {
-        Stage s = Main.getStage();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wan't to exit the program?", ButtonType.YES, ButtonType.NO);
-        alert.setHeaderText("Exit the program");
-        alert.showAndWait();
-
-        if (alert.getResult() == ButtonType.YES) {
-            s.close();
         }
     }
 }

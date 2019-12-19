@@ -140,6 +140,11 @@ public class Parser {
         return false;
     }
 
+    /**
+     * this function change the word to price -> call to price.change
+     * @param textWords
+     * @return word
+     */
     private String changePrice(ArrayList<String> textWords) {
         String result = "";
         String word = textWords.get(indexInText);
@@ -333,7 +338,12 @@ public class Parser {
         }
     }
 
-
+    /**
+     * check if the first char is upper case
+     * @param i
+     * @param allWords
+     * @return
+     */
     private boolean isUpperCase(int i, ArrayList<String> allWords ){
         if (i<allWords.size()&& Character.isUpperCase(allWords.get(i).charAt(0))){
             return true;
@@ -341,6 +351,11 @@ public class Parser {
         return false;
     }
 
+    /**
+     * delete the last doc
+     * @param s
+     * @return
+     */
     private String deleteLastDoc(String s) {
         if (s.charAt(s.length()-1)==')')
             return s.substring(0, s.length() - 2)+")";

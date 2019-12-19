@@ -2,9 +2,17 @@ package Parse;
 
 import java.util.ArrayList;
 
+/**
+ * Number class represent the words that are numbers: check and change
+ */
 public class Number {
     private ArrayList<String> newWords;
 
+    /**
+     * this function check if the word is a number
+     * @param word
+     * @return true/false
+     */
     public boolean check(String word) {
         char firstChar = word.charAt(0);
         word = word.replaceAll(",","");
@@ -14,6 +22,12 @@ public class Number {
         return false;
     }
 
+    /**
+     * this function change the word to a valid number
+     * @param textWords
+     * @param index
+     * @return string number
+     */
     public String change(ArrayList<String> textWords, int index) {
         double doubleNum;
         String word=textWords.get(index);
@@ -29,7 +43,6 @@ public class Number {
             } else {
                 word = "" + doubleNum + "B";
             }
-            //System.out.println(word);
         } else if (doubleNum >= 1000000) {
             doubleNum = doubleNum / 1000000;
             int intNum = (int)(doubleNum*1000);
@@ -39,7 +52,6 @@ public class Number {
             } else {
                 word = "" + doubleNum + "M";
             }
-            //System.out.println(word);
 
         } else if (doubleNum >= 1000) {
             doubleNum = doubleNum / 1000;
@@ -50,7 +62,6 @@ public class Number {
             } else {
                 word = "" + doubleNum + "K";
             }
-            //System.out.println(word);
 
         } else {
             double scale = Math.pow(10, 3);
@@ -60,12 +71,8 @@ public class Number {
             } else {
                 word = "" + doubleNum;
             }
-            //System.out.println(word);
         }
-
-        //insertToWordsList(words[index]);
         return word;
-
     }
 }
 

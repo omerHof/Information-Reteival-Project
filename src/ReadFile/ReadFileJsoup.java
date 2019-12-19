@@ -11,20 +11,32 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class magicThreads extends Thread {
+/**
+ * this class read files from a directory, split the words, give the words a document number and send them to parse
+ */
+public class ReadFileJsoup extends Thread {
     private File file;
     private int indexDoc;
     private String path;
     private boolean stemming;
 
-    public magicThreads(File file, int indexDoc,String path,boolean stemming){
+    /**
+     * constructor
+     * @param file
+     * @param indexDoc
+     * @param path
+     * @param stemming
+     */
+    public ReadFileJsoup(File file, int indexDoc, String path, boolean stemming){
         this.file = file;
         this.indexDoc = indexDoc;
         this.path = path;
         this.stemming = stemming;
     }
 
-
+    /**
+     * this function read files and send them to parse by threads
+     */
     public void run(){
         if (file.isDirectory()) {
             String doc = null;

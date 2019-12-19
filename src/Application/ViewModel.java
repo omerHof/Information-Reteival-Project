@@ -1,9 +1,8 @@
 package Application;
 
-import ReadFile.ReadFileJsoupThreads;
+import ReadFile.InitProgram;
 import invertedIndex.Dictionary;
 import invertedIndex.MergeSorter;
-import invertedIndex.SortedTables;
 import invertedIndex.SortedTablesThreads;
 
 import java.io.*;
@@ -12,6 +11,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+/**
+ * this class connect between LandingController and the engine
+ */
 public class ViewModel {
 
     boolean stemming;
@@ -21,13 +23,28 @@ public class ViewModel {
         this.userDictionary = new TreeMap<>();
     }
 
+    /**
+     * this function starting the engine by calling to initProgram and create the index
+     * @param input
+     * @param stemming
+     * @param output
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void excute(String input, boolean stemming, String output) throws IOException, InterruptedException {
         this.stemming = stemming;
-        ReadFileJsoupThreads readFileJsoupThreads = new ReadFileJsoupThreads(input, stemming, output);
-        String pathForPosting = readFileJsoupThreads.splitToDocs();
+        InitProgram initProgram = new InitProgram(input, stemming, output);
+        String pathForPosting = initProgram.splitToDocs();
         createIndex(pathForPosting);
     }
 
+    /**
+     * this function reset the mach folder by the user's choice
+     * @param postingPath
+     * @param stemming
+     * @return
+     * @throws IOException
+     */
     public boolean reset(String postingPath,boolean stemming) throws IOException {
         this.stemming = stemming;
         userDictionary.clear();
@@ -49,10 +66,13 @@ public class ViewModel {
         }else{
             return false;
         }
-
     }
 
-
+    /**
+     * this function help to execute to create the index
+     * @param pathForPosting
+     * @throws IOException
+     */
     public void createIndex(String pathForPosting) throws IOException {
         String pathForPrePosting = "";
         if (stemming) {
@@ -71,13 +91,13 @@ public class ViewModel {
 
         System.out.println("finish last table!----------------");
 
-
         File folder = new File(pathForPrePosting);
         File[] listOfFiles = folder.listFiles();
-
+        System.out.println("start merge!----------------");
         merge.startMergingfiles(listOfFiles.length);
         System.out.println("finish merge!----------------");
 
+        //create the folders of posting and information
         listOfFiles = folder.listFiles();
         String pathForDicPosting = pathForPosting + "\\posting";
         String pathForDicMetadata = pathForPosting + "\\Dictionary Metadata";
@@ -91,6 +111,12 @@ public class ViewModel {
         return userDictionary;
     }
 
+    /**
+     * load the Dictionary from the disk to the memory
+     * @param text
+     * @param stemming
+     * @return
+     */
     public boolean load(String text, boolean stemming) {
         this.stemming = stemming;
         if (stemming) {
@@ -109,6 +135,12 @@ public class ViewModel {
         return (!this.userDictionary.isEmpty());
     }
 
+    /**
+     * this function calculated the number of docs that indexed
+     * @param text
+     * @param stemming
+     * @return
+     */
     public int numberOfDocsThatIndexed(String text, boolean stemming){
         if (stemming) {
             File file = new File(text + "/postingStemming/Dictionary Metadata/termsInDoc.txt");
@@ -119,6 +151,11 @@ public class ViewModel {
         }
     }
 
+    /**
+     * this function count the lines in a file
+     * @param file
+     * @return
+     */
     private int checkDocIndexed(File file) {
         int numOfdocs = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -135,6 +172,10 @@ public class ViewModel {
         return numOfdocs;
     }
 
+    /**
+     * this function get a file and read the data to the memory
+     * @param file
+     */
     public void readFile (File file){
         String[] term = new String[2];
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -153,6 +194,11 @@ public class ViewModel {
         }
     }
 
+    /**
+     * this function check if a string of path of folder is exist and valid
+     * @param folderLocation
+     * @return
+     */
     public boolean validFolder(String folderLocation) {
         File f = new File(folderLocation);
         if (f.exists() && f.isDirectory()) {
@@ -161,6 +207,11 @@ public class ViewModel {
         return false;
     }
 
+    /**
+     * this function check if a string of path of file is exist and valid
+     * @param folderLocation
+     * @return
+     */
     public boolean validFile(String folderLocation) {
         File f = new File(folderLocation);
         if (f.exists()) {
@@ -168,30 +219,4 @@ public class ViewModel {
         }
         return false;
     }
-
-    public void sortByValue() throws IOException {
-
-        List<Map.Entry<String, Integer> > list =
-                new LinkedList<Map.Entry<String, Integer> >(userDictionary.entrySet());
-
-        // Sort the list
-        Collections.sort(list, new Comparator<Map.Entry<String, Integer> >() {
-            public int compare(Map.Entry<String, Integer> o1,
-                               Map.Entry<String, Integer> o2)
-            {
-                return (o2.getValue()).compareTo(o1.getValue());
-            }
-    });
-        FileWriter pw = new FileWriter("wordsAllWords.txt", false);
-        Iterator it = list.iterator();
-        while (it.hasNext()){
-            Map.Entry pair = (Map.Entry) it.next();
-            pw.write( pair.getKey() +"-"+pair.getValue() + "\r\n");
-
-        }
-        pw.close();
-        System.out.println("finish!!");
-
 }
-}
-

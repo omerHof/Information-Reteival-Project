@@ -26,8 +26,8 @@ public class testsReadFile {
         }
 
         private static void JsoupThreadStrategy(String path) throws IOException, InterruptedException {
-            ReadFileJsoupThreads readFileJsoupThreads = new ReadFileJsoupThreads(path,true, "posting");
-            readFileJsoupThreads.splitToDocs();
+            InitProgram initProgram = new InitProgram(path,true, "posting");
+            initProgram.splitToDocs();
         }
     }
 

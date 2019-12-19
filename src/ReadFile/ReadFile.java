@@ -32,7 +32,6 @@ public class ReadFile implements ReadFileMethods{
         f.mkdir();
     }
 
-
     /**
      * this function takes the files from the folder and split them to lines and send each line to the split lines function
      * @throws IOException
@@ -56,23 +55,17 @@ public class ReadFile implements ReadFileMethods{
                         }
 
                         if (streamNotReachTag(closingTextTag)) {
-                            text+=line;
-
-                            //splitToWords(line);
+                            text += line;
                             line = bufReader.readLine();
                         }
                     }
-                    //System.out.println(line);
                     if (line != null) {
-                        //Parser parser = new Parser(indexDoc,path);
-                        //parser.preparationToPaser(text);
                         indexDoc++;
                         System.out.println(indexDoc);
                     }
                     //file ends or arrive at </text>
                 }
             }
-
         }
         return "";
     }
@@ -83,5 +76,4 @@ public class ReadFile implements ReadFileMethods{
         }
         return false;
     }
-
 }

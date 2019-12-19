@@ -1,8 +1,5 @@
 package ReadFile;
 
-import invertedIndex.Dictionary;
-import invertedIndex.MergeSorter;
-import invertedIndex.SortedTablesThreads;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -22,7 +19,10 @@ import java.util.concurrent.Future;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
-public class ReadFileJsoupThreads extends Thread implements ReadFileMethods {
+/**
+ * this class creates folders for posting and creates the threads to read the files
+ */
+public class InitProgram extends Thread implements ReadFileMethods {
 
     /**
      * variables
@@ -36,7 +36,7 @@ public class ReadFileJsoupThreads extends Thread implements ReadFileMethods {
     private String pathToReturn;
 
     private ArrayList<Integer> docIndexer;
-    ArrayList<magicThreads> threadList = new ArrayList<>();
+    ArrayList<ReadFileJsoup> threadList = new ArrayList<>();
     boolean stemming;
 
     /**
@@ -44,8 +44,8 @@ public class ReadFileJsoupThreads extends Thread implements ReadFileMethods {
      *
      * @param pathForData
      */
-    public ReadFileJsoupThreads(String pathForData, boolean stemming, String pathForPosting) throws IOException {
-        this.folders = new File(pathForData + "\\corpus").listFiles();
+    public InitProgram(String pathForData, boolean stemming, String pathForPosting) throws IOException {
+        this.folders = new File(pathForData + "\\test3").listFiles();
         this.pathForData = pathForData;
         this.pathForPosting = pathForPosting;
         this.stemming = stemming;
@@ -55,6 +55,10 @@ public class ReadFileJsoupThreads extends Thread implements ReadFileMethods {
         this.threadList = new ArrayList<>();
     }
 
+    /**
+     * this function delete the folders that located in the location of the new folders using deleteFolderHelper
+     * @throws IOException
+     */
     private void deleteFolders() throws IOException {
         if (stemming) {
             deleteFolderHelper("Stemming");
@@ -65,6 +69,11 @@ public class ReadFileJsoupThreads extends Thread implements ReadFileMethods {
         }
     }
 
+    /**
+     * this function get a path of folder and delete
+     * @param pathToDelete
+     * @throws IOException
+     */
     private void deleteFolderHelper(String pathToDelete) throws IOException {
         if (validFolder(pathToDelete)){
             Path path = Paths.get(pathToDelete);
@@ -75,6 +84,10 @@ public class ReadFileJsoupThreads extends Thread implements ReadFileMethods {
         }
     }
 
+    /**
+     * this function create the folder for posting by the user's choice.
+     * @throws IOException
+     */
     private void createFolders() throws IOException {
         File f = new File(pathForData);
         f.mkdir();
@@ -91,6 +104,9 @@ public class ReadFileJsoupThreads extends Thread implements ReadFileMethods {
         }
     }
 
+    /**
+     * this function help to create the folders
+     */
     private void createFolderHelper(){
         File f2 = new File(pathForPosting+"\\posting"+pathForPrePosting);
         pathForPosting+="\\posting"+pathForPrePosting;
@@ -104,7 +120,6 @@ public class ReadFileJsoupThreads extends Thread implements ReadFileMethods {
 
         f4.mkdir();
     }
-
 
     /**
      * this function takes the files from the folder and split them docs, then send only the text part to parse class
@@ -121,15 +136,13 @@ public class ReadFileJsoupThreads extends Thread implements ReadFileMethods {
             Elements elements = html.getElementsByTag("DOC");
             int docNumber = docIndexer.get(docIndexer.size() - 1) + elements.size();
             docIndexer.add(docNumber);
-
         }
-
         ExecutorService threadPool = newFixedThreadPool(8);
         List<Callable<Object>> todo = new ArrayList<Callable<Object>>();
 
         int currentIndexDoc = 0;
         for (File file : folders) {
-            todo.add(Executors.callable(new magicThreads(file, docIndexer.get(currentIndexDoc), pathForData, stemming)));
+            todo.add(Executors.callable(new ReadFileJsoup(file, docIndexer.get(currentIndexDoc), pathForData, stemming)));
             currentIndexDoc++;
         }
         List<Future<Object>> answers = threadPool.invokeAll(todo);
@@ -137,6 +150,11 @@ public class ReadFileJsoupThreads extends Thread implements ReadFileMethods {
         return pathToReturn;
     }
 
+    /**
+     * this function check if a folder exist by a string path
+     * @param folderLocation
+     * @return true/false
+     */
     private boolean validFolder(String folderLocation) {
         File f = new File(folderLocation);
         if (f.exists() && f.isDirectory()) {

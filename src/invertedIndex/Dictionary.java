@@ -122,6 +122,7 @@ public class Dictionary {
     }
 
     /**
+     * this function take a line and calculated the number of shows in this doc
      * @param line
      * @return
      */
@@ -132,6 +133,7 @@ public class Dictionary {
     }
 
     /**
+     *  this function take a line and find the doc name
      * @param line
      * @return
      */
@@ -160,16 +162,24 @@ public class Dictionary {
         }
     }
 
+    /**
+     * this function write to the disk information about rhe posting files, terms and docs.
+     * @return
+     * @throws IOException
+     */
     public TreeMap<String, Integer> saveInformation() throws IOException {
         TreeMap<String, Integer> sorted = new TreeMap<>(userDictionary);
         Set<Map.Entry<String, Integer>> mappings = sorted.entrySet();
         TreeMap<String, String> sorted2 = new TreeMap<>(dictionary);
         Set<Map.Entry<String, String>> mappings2 = sorted2.entrySet();
+
+        //create the files of the dictionary for posting and the dictionary of terms-shows in corpus
         FileWriter pw = new FileWriter(pathForDicMetadata+"/dicMetaData.txt", false);
         FileWriter pw1 = new FileWriter(pathForDicMetadata+"/termsInDic.txt", false);
         Iterator it = mappings2.iterator();
         Iterator it1 = mappings.iterator();
 
+        //write the files of the dictionary for posting and the dictionary of terms-shows in corpus
         while (it.hasNext() && it1.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
             pw.write(pair.getKey() + " " + pair.getValue() + "\r\n");
@@ -179,18 +189,18 @@ public class Dictionary {
         pw.close();
         pw1.close();
 
-
-
         TreeMap<String, Integer> sorted3 = new TreeMap<>(popularWordInDoc);
         Set<Map.Entry<String, Integer>> mappings3 = sorted3.entrySet();
         TreeMap<String, Integer> sorted4 = new TreeMap<>(wordsInDoc);
         Set<Map.Entry<String, Integer>> mappings4 = sorted4.entrySet();
 
-
+        //create the files of the doc-amonunt of the most popular word doc and doc-amount of unique words
         pw = new FileWriter(pathForDicMetadata+"/amountOfPopularInDoc.txt", false);
         pw1 = new FileWriter(pathForDicMetadata+"/termsInDoc.txt", false);
         it = mappings3.iterator();
         it1 = mappings4.iterator();
+
+        //write the files of the doc-amonunt of the most popular word doc and doc-amount of unique words
         while(it.hasNext() && it1.hasNext()){
             Map.Entry pair = (Map.Entry) it.next();
             pw.write(pair.getKey() + " " + pair.getValue() + "\r\n");
@@ -203,4 +213,3 @@ public class Dictionary {
         return sorted;
     }
 }
-

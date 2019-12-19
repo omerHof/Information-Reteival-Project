@@ -22,6 +22,10 @@ public class SortedTablesThreads {
     private boolean stemming;
     private String wordFolder;
 
+    /**
+     * constructor
+     * @param stemming
+     */
     public SortedTablesThreads(boolean stemming) {
         this.stemming = stemming;
         if (stemming){
@@ -33,7 +37,6 @@ public class SortedTablesThreads {
 
     /**
      * get words from parse, insert to tables and writes to the disk
-     *
      * @param word
      * @param docNum
      * @param position
@@ -43,7 +46,6 @@ public class SortedTablesThreads {
         if (word == null || word.equals("")) {
             return;
         }
-        //
         queue.add(word + " " + docNum + " " + position);
 
         if (queue.size() > 1500000 && lock) {
@@ -57,6 +59,10 @@ public class SortedTablesThreads {
         writeToFile();
     }
 
+    /**
+     * this function write the tables to files
+     * @throws IOException
+     */
     private void writeToFile() throws IOException {
 
         tableNum++;
@@ -68,10 +74,12 @@ public class SortedTablesThreads {
             writer.write(str + System.lineSeparator());
         }
         writer.close();
-
     }
 
-
+    /**
+     * this function write the entities to files by another table
+     * @throws IOException
+     */
     public void entityToSortedTable() throws IOException {
         HashMap<String,ArrayList<Integer>> entities = Parser.getEntities();
         TreeMap<String, ArrayList<Integer>> sorted = new TreeMap<>();
