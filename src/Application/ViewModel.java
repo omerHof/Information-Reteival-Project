@@ -34,7 +34,8 @@ public class ViewModel {
         createIndex(pathForPosting);
     }
 
-    public void reset(String postingPath) throws IOException {
+    public void reset(String postingPath,boolean stemming) throws IOException {
+        this.stemming = stemming;
         userDictionary.clear();
         Path path;
         if (stemming){
