@@ -1,9 +1,5 @@
 package Application;
 
-import ReadFile.ReadFileJsoupThreads;
-import invertedIndex.Dictionary;
-import invertedIndex.MergeSorter;
-import invertedIndex.SortedTablesThreads;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -13,22 +9,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.TreeMap;
 
 
 public class LandingController extends Controller implements Initializable {
@@ -177,24 +165,23 @@ public class LandingController extends Controller implements Initializable {
             alert.setContentText("Ooops, there is no dictionary!");
             alert.showAndWait();
         }else{
-            showDictionary(userDictionary);
+            dictionaryTableShow(userDictionary);
         }
     }
 
-    private void showDictionary(Map<String, Integer> userDictionary) throws IOException {
-
-
-        TableColumn<Map.Entry<String,Integer>,String> tfCol = new TableColumn<>("Total terms in corpus");
-        tfCol.setCellValueFactory(p->new SimpleStringProperty(String.valueOf(p.getValue().getValue())));
+    private void dictionaryTableShow(Map<String, Integer> userDictionary) throws IOException {
 
         TableColumn<Map.Entry<String,Integer>,String> termColumn = new TableColumn<>("Term");
+        TableColumn<Map.Entry<String,Integer>,String> tfCol = new TableColumn<>("Total terms in corpus");
+
         termColumn.setCellValueFactory(p->new SimpleStringProperty(p.getValue().getKey()));
+        tfCol.setCellValueFactory(p->new SimpleStringProperty(String.valueOf(p.getValue().getValue())));
 
         FXMLLoader fxmlLoader = new FXMLLoader();
         Parent root = fxmlLoader.load(getClass().getResource("/Application/Dictionary.fxml").openStream());
-        TableView<Map.Entry<String,Integer>> tableView = ((DictionaryTable)fxmlLoader.getController()).getTableView();
-        tableView.setItems(FXCollections.observableArrayList(userDictionary.entrySet()));
-        tableView.getColumns().setAll(termColumn,tfCol);
+        TableView<Map.Entry<String,Integer>> entryTableView = ((DictionaryToShow)fxmlLoader.getController()).getTableView();
+        entryTableView.setItems(FXCollections.observableArrayList(userDictionary.entrySet()));
+        entryTableView.getColumns().setAll(termColumn,tfCol);
 
         Stage stage = new Stage();
         stage.setTitle("Dictionary");
@@ -222,6 +209,11 @@ public class LandingController extends Controller implements Initializable {
             alert.setContentText("Ooops, there is no dictionary!");
             alert.showAndWait();
         }
+
+    }
+
+    public void sorted(ActionEvent actionEvent) throws IOException {
+        viewModel.sortByValue();
 
     }
 

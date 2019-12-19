@@ -117,7 +117,6 @@ public class Dictionary {
             }
             pw.close();
             ln = reader.readLine();
-            System.out.println(index);
             index++;
         }
     }

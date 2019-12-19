@@ -45,7 +45,7 @@ public class ReadFileJsoupThreads extends Thread implements ReadFileMethods {
      * @param pathForData
      */
     public ReadFileJsoupThreads(String pathForData, boolean stemming, String pathForPosting) throws IOException {
-        this.folders = new File(pathForData + "\\tests").listFiles();
+        this.folders = new File(pathForData + "\\corpus").listFiles();
         this.pathForData = pathForData;
         this.pathForPosting = pathForPosting;
         this.stemming = stemming;

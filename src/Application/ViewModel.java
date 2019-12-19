@@ -6,17 +6,11 @@ import invertedIndex.MergeSorter;
 import invertedIndex.SortedTables;
 import invertedIndex.SortedTablesThreads;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.TreeMap;
+import java.util.*;
 
 public class ViewModel {
 
@@ -174,5 +168,30 @@ public class ViewModel {
         }
         return false;
     }
+
+    public void sortByValue() throws IOException {
+
+        List<Map.Entry<String, Integer> > list =
+                new LinkedList<Map.Entry<String, Integer> >(userDictionary.entrySet());
+
+        // Sort the list
+        Collections.sort(list, new Comparator<Map.Entry<String, Integer> >() {
+            public int compare(Map.Entry<String, Integer> o1,
+                               Map.Entry<String, Integer> o2)
+            {
+                return (o2.getValue()).compareTo(o1.getValue());
+            }
+    });
+        FileWriter pw = new FileWriter("wordsAllWords.txt", false);
+        Iterator it = list.iterator();
+        while (it.hasNext()){
+            Map.Entry pair = (Map.Entry) it.next();
+            pw.write( pair.getKey() +"-"+pair.getValue() + "\r\n");
+
+        }
+        pw.close();
+        System.out.println("finish!!");
+
+}
 }
 
