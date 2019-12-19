@@ -64,7 +64,7 @@ public class Parser {
     public void parse() throws IOException {
 
         //remove dots and commas
-        doc = doc.replaceAll("[^ -~]|\\.{2,}|\\/|\\,+|\\s\\-+|\\'+|\\#+|\\&+|\\,\\s|\\?+|\\!+|\\*+\\++|\\.,|\\)|\\(|\\-{2,}|\\:|\\;|\\]|\\[|[\"]|\\W\\bs\\b|[a-zA-Z]+\\s\\bpercent\\b|[a-zA-Z]+\\s\\bpercentage\\b", " ");
+        doc = doc.replaceAll("[^ -~]|\\||\\.{2,}|\\/|\\,+|\\s\\-+|\\'+|\\#+|\\&+|\\,\\s|\\?+|\\!+|\\*+|\\++|\\.,|\\)|\\(|\\-{2,}|\\:|\\;|\\]|\\[|[\"]|\\W\\bs\\b|[a-zA-Z]+\\s\\bpercent\\b|[a-zA-Z]+\\s\\bpercentage\\b", " ");
 
         //entity and date removal
         doc = addToEntity();

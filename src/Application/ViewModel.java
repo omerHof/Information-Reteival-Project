@@ -34,19 +34,28 @@ public class ViewModel {
         createIndex(pathForPosting);
     }
 
-    public void reset(String postingPath,boolean stemming) throws IOException {
+    public boolean reset(String postingPath,boolean stemming) throws IOException {
         this.stemming = stemming;
         userDictionary.clear();
         Path path;
+        String location;
         if (stemming){
             path = Paths.get(postingPath+"/postingStemming");
+            location = postingPath+"/postingStemming";
         }else {
             path = Paths.get(postingPath+"/postingwithoutStemming");
+            location = postingPath+"/postingwithoutStemming";
         }
-        Files.walk(path)
-                .sorted(Comparator.reverseOrder())
-                .map(Path::toFile)
-                .forEach(File::delete);
+        if (validFolder(location)){
+            Files.walk(path)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+            return true;
+        }else{
+            return false;
+        }
+
     }
 
 
@@ -89,6 +98,7 @@ public class ViewModel {
     }
 
     public boolean load(String text, boolean stemming) {
+        this.stemming = stemming;
         if (stemming) {
             String path = text + "/postingStemming/Dictionary Metadata/termsInDic.txt";
             if (validFile(path)){
@@ -142,7 +152,7 @@ public class ViewModel {
                 term = line.split("\\/");
                 int appears = Integer.parseInt(term[1]);
                 this.userDictionary.put(term[0],appears);
-                //this.userDictionaryInArray.add(line);
+
             }
         } catch (IOException e) {
             e.printStackTrace();

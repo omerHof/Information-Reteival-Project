@@ -147,12 +147,20 @@ public class LandingController extends Controller implements Initializable {
             return;
         }
 
-        viewModel.reset(textFieldPosting.getText(),stemming);
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Information Dialog");
-        alert.setHeaderText(null);
-        alert.setContentText("reset completed successfully!");
-        alert.showAndWait();
+        if (viewModel.reset(textFieldPosting.getText(),stemming)){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("reset completed successfully!");
+            alert.showAndWait();
+        } else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Look, an Error Dialog");
+            alert.setContentText("Ooops, there is no folder to delete!");
+            alert.showAndWait();
+        }
+
 
 
     }
