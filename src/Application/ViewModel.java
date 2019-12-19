@@ -36,12 +36,16 @@ public class ViewModel {
 
     public void reset(String postingPath) throws IOException {
         userDictionary.clear();
-        Path path = Paths.get(postingPath);
+        Path path;
+        if (stemming){
+            path = Paths.get(postingPath+"/postingStemming");
+        }else {
+            path = Paths.get(postingPath+"/postingwithoutStemming");
+        }
         Files.walk(path)
                 .sorted(Comparator.reverseOrder())
                 .map(Path::toFile)
                 .forEach(File::delete);
-
     }
 
 
