@@ -30,7 +30,7 @@ public class testsParser {
                 "Vietnamese people in their struggle for national liberation in " +
                 "the past as well as in national Vietnamese construction and defence at present";
         String sentence3 = " We also provide-static-- electricity protection for filling and draining devices";
-        Parser parser = new Parser(docIndex,sentence1,pathForStopWords,true);
+        Parser parser = new Parser(docIndex,sentence1,pathForStopWords,true,false);
         numberTest(parser);
         entityTest(parser);
         betweenTest(parser);
@@ -95,7 +95,7 @@ public class testsParser {
         int counter = 1;
         for (Element element : elements) {
             System.out.println(counter);
-            Parser parser1 = new Parser(counter,element.text(),pathForStopWords,true);
+            Parser parser1 = new Parser(counter,element.text(),pathForStopWords,true,false);
             parser1.parse();
             counter++;
         }

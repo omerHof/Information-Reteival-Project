@@ -57,7 +57,7 @@ public class ReadFileJsoup extends Thread {
                 }else{
                     Parser parser = null;
                     try {
-                        parser = new Parser(indexDoc,element.getElementsByTag("TEXT").text(),path,stemming);
+                        parser = new Parser(indexDoc,element.getElementsByTag("TEXT").text(),path,stemming,false);
                         parser.parse();
                         System.out.println(indexDoc);
                     } catch (IOException e) {

@@ -14,19 +14,18 @@ public class Rank {
     HashMap<Integer,Integer> scores;
     boolean stemming;
     Dictionary oldDictionary;
-    final int b=0.75;
+    final double b=0.75;
 
     /**
      * constructor
      * @param words
-     * @param scores
      * @param stemming
      */
-    public Rank(ArrayList<String> words, HashMap<String, Integer> scores, boolean stemming) {
+    public Rank(ArrayList<String> words, boolean stemming) {
         this.words = words;
-        this.scores = scores;
         this.stemming = stemming;
     }
+    /*
 
     public HashMap<String,Integer> rankWord(String word){
         HashMap<String,String> dictionary= oldDictionary.getDictionary();//todo get the dictionary
@@ -44,5 +43,5 @@ public class Rank {
             calculateScore(numOfDocs,numberInDoc,wordsInDoc,)
             scores.put(doc,);
         }
-
+*/
 }

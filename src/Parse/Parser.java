@@ -37,10 +37,11 @@ public class Parser {
     private Stemmer stemmer;
     private Parse.price price;
     private boolean stemming;
+    private boolean query;
+    private ArrayList<String> queryWord;
 
 
-
-    public Parser(int indexDoc, String doc, String path, boolean stemming) throws IOException {
+    public Parser(int indexDoc, String doc, String path, boolean stemming, boolean query) throws IOException {
         this.indexDoc = indexDoc;
         this.doc = doc;
         this.path = path;
@@ -54,6 +55,8 @@ public class Parser {
         this.price = new price();
         this.sortedTablesThreads = new SortedTablesThreads(stemming);
         this.stemming = stemming;
+        this.query = query;
+        this.queryWord = new ArrayList<>();
     }
 
     /**
@@ -435,8 +438,15 @@ public class Parser {
      */
     public void insertToWordsList(String word,int position) throws IOException {
 
-        //step1.addToTable(word, indexDoc, position);
-        sortedTablesThreads.addToTable(word, indexDoc, position);
+        if (query) {
+            //adds to data structure
+            queryWord.add(word);
+            //if its the last word, create ranker and send data structure to it + entities...
+        }else{
+            //step1.addToTable(word, indexDoc, position);
+            sortedTablesThreads.addToTable(word, indexDoc, position);
+        }
+
     }
 
     /**
@@ -450,7 +460,12 @@ public class Parser {
         stemmer.add(charAray,word.length());
         stemmer.stem();
         //step1.addToTable(stemmer.toString(), indexDoc, position);
-        sortedTablesThreads.addToTable(stemmer.toString(), indexDoc, position);
+        if (query){
+            queryWord.add(stemmer.toString());
+        }else{
+            sortedTablesThreads.addToTable(stemmer.toString(), indexDoc, position);
+        }
+
     }
 
 
@@ -460,5 +475,9 @@ public class Parser {
 
     public static HashMap<String, Integer> getBigWordList() {
         return bigWordList;
+    }
+
+    public ArrayList<String> getQueryWord() {
+        return queryWord;
     }
 }

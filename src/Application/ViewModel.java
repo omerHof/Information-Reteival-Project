@@ -19,6 +19,8 @@ public class ViewModel {
     boolean stemming;
 
     TreeMap<String, Integer> userDictionary;
+    static String pathToData;
+    static String pathToOutput;
 
     public ViewModel() {
         this.userDictionary = new TreeMap<>();
@@ -34,6 +36,8 @@ public class ViewModel {
      */
     public void excute(String input, boolean stemming, String output) throws IOException, InterruptedException {
         this.stemming = stemming;
+        this.pathToData = input;
+        this.pathToOutput = output;
         InitProgram initProgram = new InitProgram(input, stemming, output);
         String pathForPosting = initProgram.splitToDocs();
         createIndex(pathForPosting);
@@ -219,5 +223,21 @@ public class ViewModel {
             return true;
         }
         return false;
+    }
+
+    public static String getPathToData() {
+        return pathToData;
+    }
+
+    public static void setPathToData(String pathToData) {
+        ViewModel.pathToData = pathToData;
+    }
+
+    public static String getPathToOutput() {
+        return pathToOutput;
+    }
+
+    public static void setPathToOutput(String pathToOutput) {
+        ViewModel.pathToOutput = pathToOutput;
     }
 }
