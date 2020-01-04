@@ -39,6 +39,7 @@ public class Parser {
     private boolean stemming;
     private boolean query;
     private ArrayList<String> queryWord;
+    private ArrayList<String> queryEntity;
 
 
     public Parser(int indexDoc, String doc, String path, boolean stemming, boolean query) throws IOException {
@@ -57,6 +58,7 @@ public class Parser {
         this.stemming = stemming;
         this.query = query;
         this.queryWord = new ArrayList<>();
+        this.queryEntity = new ArrayList<>();
     }
 
     /**
@@ -307,7 +309,10 @@ public class Parser {
         }
 
         //delete last dot
-        allWords.set(allWords.size()-1,deleteLastDoc(allWords.get(allWords.size()-1)));
+        if (!query){
+            allWords.set(allWords.size()-1,deleteLastDoc(allWords.get(allWords.size()-1)));
+        }
+
 
         return allWords.stream().collect(Collectors.joining(" "));
     }
@@ -317,15 +322,20 @@ public class Parser {
      * @param word - a string that represents an word.
      */
     private void addToStaticList(String word,HashMap<String,ArrayList<Integer>> list ) {
-        if (list.containsKey(word)){
-            if(!list.get(word).contains(indexDoc)){
+        if (query) {
+            queryEntity.add(word);
+        }else{
+            if (list.containsKey(word)){
+                if(!list.get(word).contains(indexDoc)){
+                    list.get(word).add(indexDoc);
+                }
+            }else {
+                ArrayList<Integer> temp = new ArrayList<>();
+                list.put(word,temp);
                 list.get(word).add(indexDoc);
             }
-        }else {
-            ArrayList<Integer> temp = new ArrayList<>();
-            list.put(word,temp);
-            list.get(word).add(indexDoc);
         }
+
     }
 
 
@@ -479,5 +489,9 @@ public class Parser {
 
     public ArrayList<String> getQueryWord() {
         return queryWord;
+    }
+
+    public ArrayList<String> getQueryEntity() {
+        return queryEntity;
     }
 }

@@ -7,10 +7,16 @@ public class QueryTest {
     public static void main(String[] args){
 
         //testForSingleQuery();
-        testForQueriesFile();
+        //testForQueriesFile();
+        testForDocNum();
 
     }
 
+    private static void testForDocNum() {
+        docNum docNum = new docNum();
+        docNum.initDocNum("C:\\Users\\ohoff\\Documents\\information retrieval\\corpus\\corpus");
+
+    }
 
 
     private static void testForSingleQuery() {

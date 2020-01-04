@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -34,6 +35,7 @@ public class InitProgram extends Thread implements ReadFileMethods {
     private String pathForPrePosting;
     private String pathForDicMetadata;
     private String pathToReturn;
+
 
     private ArrayList<Integer> docIndexer;
     ArrayList<ReadFileJsoup> threadList = new ArrayList<>();
@@ -137,6 +139,7 @@ public class InitProgram extends Thread implements ReadFileMethods {
             Elements elements = html.getElementsByTag("DOC");
             int docNumber = docIndexer.get(docIndexer.size() - 1) + elements.size();
             docIndexer.add(docNumber);
+
         }
         ExecutorService threadPool = newFixedThreadPool(8);
         List<Callable<Object>> todo = new ArrayList<Callable<Object>>();

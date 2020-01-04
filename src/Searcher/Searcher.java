@@ -6,6 +6,7 @@ import Ranker.Rank;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.stream.Collectors;
@@ -30,13 +31,35 @@ public class Searcher extends Thread  {
             Parser parser = new Parser(0,query, ViewModel.getPathToData(),stemming,true);
             parser.parse();
             ArrayList<String> words = parser.getQueryWord();
-            HashMap<String,ArrayList<Integer>> entities =Parser.getEntities();
-            words.addAll(entities.keySet());
+            words.addAll(parser.getQueryEntity());
+            reduceNotEntity(words);
             System.out.println(words.stream().collect(Collectors.joining(" ")));
             //Rank rank = new Rank(words,stemming);
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void reduceNotEntity(ArrayList<String> words) {
+        for (int i=0;i<words.size();i++){
+            if(words.get(i).contains(" ")){
+                String[] temp = words.get(i).split(" ");
+                words.remove(words.get(i));
+                words.addAll(Arrays.asList(temp));
+            }
+        }
+
+        for(int i=0;i<words.size()-1;i++){
+            if(words.get(i).charAt(0)>91){
+                for( int j=i+1;j<words.size();j++ ){
+                    if (words.get(i).equals(words.get(j).toLowerCase())){
+                        words.remove(i);
+                        i--;
+                        break;
+                    }
+                }
+            }
         }
     }
 

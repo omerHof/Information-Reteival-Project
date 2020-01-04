@@ -1,5 +1,7 @@
 package Application;
 
+import Parse.Parser;
+import Query.DominantEntity;
 import ReadFile.InitProgram;
 import invertedIndex.Dictionary;
 import invertedIndex.MergeSorter;
@@ -89,6 +91,8 @@ public class ViewModel {
         MergeSorter merge = new MergeSorter(1, pathForPrePosting);
 
         System.out.println("finish parser!----------------");
+        DominantEntity.getInstanceUsingDoubleLocking(Parser.getEntities());
+
         sortedTablesThreads.entityToSortedTable();
 
         System.out.println("finish entity!----------------");
