@@ -44,6 +44,7 @@ public class InitProgram extends Thread implements ReadFileMethods {
      *
      * @param pathForData
      */
+
     public InitProgram(String pathForData, boolean stemming, String pathForPosting) throws IOException {
         this.folders = new File(pathForData + "\\test3").listFiles();
         this.pathForData = pathForData;
