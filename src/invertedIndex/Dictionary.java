@@ -37,6 +37,10 @@ public class Dictionary {
 
     }
 
+    public HashMap<String, Integer> getWordsInDoc() {
+        return wordsInDoc;
+    }
+
     /**
      * this function reads the file, split to x posting files and creates the dictionary
      *
@@ -137,7 +141,7 @@ public class Dictionary {
      * @param line
      * @return
      */
-    private String calculateDoc(String[] line) {
+    public String calculateDoc(String[] line) {
         if (line.length > 3) {
             return line[line.length - 2];
         }
@@ -150,7 +154,7 @@ public class Dictionary {
      * @param line
      * @return the word
      */
-    private String calculateWord(String[] line) {
+    public String calculateWord(String[] line) {
         if (line.length > 3) {
             String ans = line[0];
             for (int i = 1; i < line.length - 2; i++) {
@@ -211,5 +215,9 @@ public class Dictionary {
         pw1.close();
 
         return sorted;
+    }
+
+    public HashMap<String, String> getDictionary() {
+        return dictionary;
     }
 }
