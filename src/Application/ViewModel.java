@@ -17,6 +17,7 @@ import java.util.*;
 public class ViewModel {
 
     boolean stemming;
+
     TreeMap<String, Integer> userDictionary;
 
     public ViewModel() {
