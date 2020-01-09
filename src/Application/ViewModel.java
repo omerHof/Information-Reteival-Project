@@ -2,6 +2,7 @@ package Application;
 
 import Parse.Parser;
 import Query.DominantEntity;
+import Query.initPartB;
 import ReadFile.InitProgram;
 import invertedIndex.Dictionary;
 import invertedIndex.MergeSorter;
@@ -91,7 +92,7 @@ public class ViewModel {
         MergeSorter merge = new MergeSorter(1, pathForPrePosting);
 
         System.out.println("finish parser!----------------");
-        DominantEntity.getInstanceUsingDoubleLocking(Parser.getEntities());
+        DominantEntity.getEntityListInstance(Parser.getEntities());
 
         sortedTablesThreads.entityToSortedTable();
 
@@ -114,6 +115,10 @@ public class ViewModel {
         dictionary.create();
         this.userDictionary = dictionary.saveInformation();
         SortedTablesThreads.setTableNum(0);
+    }
+
+    public void functionsPartB(String pathToData, String pathToOutput, boolean stemming){
+        initPartB init = new initPartB(pathToData,pathToOutput,stemming);
     }
 
     public TreeMap<String, Integer> getUserDictionary() {

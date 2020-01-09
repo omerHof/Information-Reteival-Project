@@ -5,16 +5,24 @@ import Parse.Parser;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * this class is help class to get 5 dominant entity from a given document.
+ */
 
 public class DominantEntity {
         private static DominantEntity instance;
         private static HashMap<String, ArrayList<Integer>> entities;
+
         private DominantEntity(HashMap<String, ArrayList<Integer>> entities) {
             this.entities = entities;
         }
 
-
-    public static DominantEntity getInstanceUsingDoubleLocking(HashMap<String, ArrayList<Integer>> entities){
+    /**
+     * the list of entity is single instance
+     * @param entities
+     * @return
+     */
+    public static DominantEntity getEntityListInstance(HashMap<String, ArrayList<Integer>> entities){
         if(instance == null){
             synchronized (DominantEntity.class) {
                 if(instance == null){
@@ -29,6 +37,12 @@ public class DominantEntity {
         return entities;
     }
 
+    /**
+     * main method - get document and return 5 dominant entity from it.
+     * @param doc
+     * @param stemming
+     * @return
+     */
     public static ArrayList<String> getDominantEntities(String doc, boolean stemming){
         ArrayList<String> dominateWordsToReturn = new ArrayList<>();
         try{
@@ -60,6 +74,12 @@ public class DominantEntity {
 
         return dominateWordsToReturn;
     }
+
+    /**
+     * help function to main method, sort the list of entities by number of occurrences.
+     * @param hm
+     * @return
+     */
 
         public static HashMap<String, Integer> sortByValue(HashMap<String, Integer> hm)
         {

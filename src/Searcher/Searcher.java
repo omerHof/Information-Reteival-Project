@@ -26,6 +26,9 @@ public class Searcher extends Thread  {
         this.parse();
     }
 
+    /**
+     * this method parse the query
+     */
     private void parse()  {
         try {
             Parser parser = new Parser(0,query, ViewModel.getPathToData(),stemming,true);
@@ -34,7 +37,9 @@ public class Searcher extends Thread  {
             words.addAll(parser.getQueryEntity());
             reduceNotEntity(words);
             System.out.println(words.stream().collect(Collectors.joining(" ")));
-            //Rank rank = new Rank(words,stemming);
+            Rank rank = new Rank(words,stemming);
+            ArrayList<String> docs = new ArrayList<>();
+
 
         } catch (IOException e) {
             e.printStackTrace();
