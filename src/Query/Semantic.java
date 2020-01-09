@@ -25,8 +25,8 @@ public class Semantic {
 
     try {
         URL adress = new URL("https://api.datamuse.com/words?ml="+stringWord);
-        StringBuilder sBuilder = new StringBuilder(("{\"result\":"));
         Scanner scanner = new Scanner(adress.openStream());
+        StringBuilder sBuilder = new StringBuilder(("{\"result\":"));
         while (scanner.hasNext()) {
             sBuilder.append(scanner.nextLine());
         }

@@ -2,6 +2,7 @@ package Ranker;
 
 
 import Application.ViewModel;
+import Query.initPartB;
 import invertedIndex.Dictionary;
 import javafx.application.Application;
 
@@ -13,6 +14,7 @@ import java.util.*;
 
 public class Rank {
     ArrayList<String> words;
+    ArrayList<String> additionalWords;
     HashMap<String, Double> scores;
     ArrayList<Integer> result;
     boolean stemming;
@@ -36,17 +38,17 @@ public class Rank {
      * @param words
      * @param stemming
      */
-    public Rank(ArrayList<String> words, boolean stemming,HashMap<Integer,Integer> docsLength) {
+    public Rank(ArrayList<String> words,ArrayList<String> words2, boolean stemming) {
         this.words = words;
+        this.additionalWords=words2;
         this.scores = new HashMap<>();
         this.stemming = stemming;
-        this.dictionary=new HashMap<>();
+        this.dictionary= initPartB.getDictionary();
         //this.wordsInDoc=new HashMap<>();
-        this.popularwWord=new HashMap<>();
-        this.docsLength=docsLength;
+        this.popularwWord=initPartB.getPopularwWord();
+        this.docsLength=initPartB.getTotalWordsInDoc();
         this.result=new ArrayList<>();
         this.avgDl=caculateAvarageLength(docsLength);
-        initInformation(ViewModel.getPathToOutput());
     }
 
     /**
@@ -70,82 +72,16 @@ public class Rank {
     }
 
     /**
-     * read the meta data from the disk (stemming/without) using readFileDictionary and readFileWordInDoc
-     * @param pathToOutput
-     */
-    private void initInformation(String pathToOutput) {
-        if (stemming) {
-            String pathDictionary =pathToOutput + "/postingStemming/Dictionary Metadata/dicMetaData.txt";
-            //String pathWordInDoc =pathToOutput + "/postingStemming/Dictionary Metadata/termsInDoc.txt";
-            String pathPopular =pathToOutput + "/postingStemming/Dictionary Metadata/amountOfPopularInDoc.txt";
-            if (viewModel.validFile(pathDictionary)&&viewModel.validFile(pathPopular)){
-                File file = new File(pathDictionary);
-                readFileDictionary(file);
-                File file2 = new File(pathPopular);
-                readFilePopular(file2);
-            }
-        } else {
-            String pathDictionary =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/dicMetaData.txt";
-            //String pathWordInDoc =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/termsInDoc.txt";
-            String pathPopular =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/amountOfPopularInDoc.txt";
-            if (viewModel.validFile(pathDictionary)&&viewModel.validFile(pathPopular)){
-                File file = new File(pathDictionary);
-                readFileDictionary(file);
-                File file2 = new File(pathPopular);
-                readFilePopular(file2);
-            }
-        }
-    }
-
-    /**
-     * read the file word in doc to HashMap
-     * @param file2
-     */
-    private void readFilePopular(File file2) {
-        String[] term;
-        try (BufferedReader reader = new BufferedReader(new FileReader(file2))) {
-            while (true) {
-                String line = reader.readLine();
-                if (line == null) {
-                    break;
-                }
-                term = line.split(" ");
-                this.popularwWord.put(Integer.parseInt(term[0]),Integer.parseInt(term[1]));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    /**
-     * read the file dictionary to HashMap
-     * @param file
-     */
-    private void readFileDictionary(File file) {
-        String[] term;
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            while (true) {
-                String line = reader.readLine();
-                if (line == null) {
-                    break;
-                }
-                term = line.split(" ");
-                String []data = term[1].split("-");
-                if(data.length>2) {
-                    this.dictionary.put(term[0], data[0] + "-" + data[1] + "-" + data[2]);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * wrap function for iterate all words in query and sort
      * @return
      */
     public ArrayList<Integer> rankQuery(){
+        int constant=1;
         for(String word:words){
-            merge(rankWord(word));
+            merge(rankWord(word,constant));
+        }
+        for(String word:additionalWords){
+            merge(rankWord(word,constant/3));
         }
         scores = sortByValue();
         result=prepareBestResult(scores);
@@ -175,7 +111,7 @@ public class Rank {
      * @param word
      * @return
      */
-    public HashMap<String, Double> rankWord(String word) {
+    public HashMap<String, Double> rankWord(String word,int constant) {
         double score;
         HashMap<String, Double> docScore=new HashMap<>();
         String tempValue=dictionary.get(word);
@@ -196,7 +132,7 @@ public class Rank {
                 String doc = calculateDoc(line);
                 int popularDoc = popularwWord.get(Integer.parseInt(doc));
                 int numWordsInDoc = docsLength.get(Integer.parseInt(doc));
-                score = calculateScore(numOfDocs, numberInDoc, popularDoc, numWordsInDoc,firstLocation, b, k1, avgDl);
+                score = calculateScore(numOfDocs, numberInDoc, popularDoc, numWordsInDoc,firstLocation, b, k1, avgDl,constant);
                 docScore.put(doc, score);
             }
             postingLine++;
@@ -257,10 +193,10 @@ public class Rank {
      * @param avgDl
      * @return
      */
-    private double calculateScore(int n, int numberInDoc,int popular, int numWordsInDoc,int firstLocation, double b, double k1, double avgDl) {
+    private double calculateScore(int n, int numberInDoc,int popular, int numWordsInDoc,int firstLocation, double b, double k1, double avgDl,int constant) {
         double idf=(docsLength.size()-n+0.5)/(n+0.5);
         idf=Math.log(idf);
-        return idf*((numberInDoc*(k1+1)/popular)/((numberInDoc/popular)*(firstLocation/numWordsInDoc)+k1*(1-b+b*(numWordsInDoc/avgDl))));
+        return constant*idf*((numberInDoc*(k1+1)/popular)/((numberInDoc/popular)*(firstLocation/numWordsInDoc)+k1*(1-b+b*(numWordsInDoc/avgDl))));
     }
 
     /**

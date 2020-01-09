@@ -22,8 +22,8 @@ public class TestRank {
         //for(int i=0; i<1000000;i++){
         //    length.put(i,i);
         //}
-        Rank rank=new Rank(test1,false,length);
-        result=rank.rankQuery();
+        //Rank rank=new Rank(test1,false);
+        //result=rank.rankQuery();
         System.out.println("finish ranking");
         for (int i = 0; i < result.size(); i++)
             System.out.println("place "+i+" is:"+result.get(i));

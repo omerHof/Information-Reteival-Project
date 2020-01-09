@@ -2,7 +2,6 @@ package Application;
 
 import Parse.Parser;
 import Query.DominantEntity;
-import Query.InitQuery;
 import Query.initPartB;
 import ReadFile.InitProgram;
 import invertedIndex.Dictionary;
@@ -116,18 +115,17 @@ public class ViewModel {
         dictionary.create();
         this.userDictionary = dictionary.saveInformation();
         SortedTablesThreads.setTableNum(0);
-        String query = "people";
-        functionsPartB(pathToData,pathForDicMetadata,stemming,query);
+        functionsPartB(pathToData,pathForDicMetadata,stemming);
     }
 
-    public void functionsPartB(String pathToData, String pathToOutput, boolean stemming,String queryString){
-        setPathToData(pathToData);
-        setPathToOutput(pathToOutput);
-        String pathToData1 = pathToData+"\\test";
+    public void functionsPartB(String pathToData, String pathToOutput, boolean stemming){
+        String pathToData1 = pathToData;
         initPartB init = new initPartB(pathToData1,pathToOutput,stemming);
-
-        InitQuery query = new InitQuery(queryString,true);
-        query.initSearcher();
+        HashMap<String, ArrayList<Integer>> entities = initPartB.getEntities();
+        HashMap<String, String> dictionary = initPartB.getDictionary();
+        HashMap<Integer, Integer> totalWordsInDoc = initPartB.getTotalWordsInDoc();
+        HashMap<Integer, Integer> popularwWord = initPartB.getPopularwWord();
+        HashMap<Integer, String> docNum = initPartB.getDocNum();
 
 
 
@@ -161,6 +159,31 @@ public class ViewModel {
         return (!this.userDictionary.isEmpty());
     }
 
+    /**
+     * load the Dictionary from the disk to the memory
+     * @param text
+     * @param stemming
+     * @return
+     */
+    /*
+    public boolean loadDictionary(String text, boolean stemming) {
+        this.stemming = stemming;
+        if (stemming) {
+            String path = text + "/postingStemming/Dictionary Metadata/dicMetaData.txt";
+            if (validFile(path)){
+                File file = new File(path);
+                readFile(file);
+            }
+        } else {
+            String path =text + "/postingWithoutStemming/Dictionary Metadata/dicMetaData.txt";
+            if (validFile(path)){
+                File file = new File(path);
+                readFile(file);
+            }
+        }
+        return (!this.userDictionary.isEmpty());
+    }
+*/
     /**
      * this function calculated the number of docs that indexed
      * @param text
