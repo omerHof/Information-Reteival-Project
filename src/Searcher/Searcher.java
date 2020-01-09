@@ -2,11 +2,13 @@ package Searcher;
 
 import Application.ViewModel;
 import Parse.Parser;
+import Query.Semantic;
 import Ranker.Rank;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -39,16 +41,50 @@ public class Searcher extends Thread  {
             ArrayList<String> words = parser.getQueryWord();
             words.addAll(entities);
             System.out.println(words.stream().collect(Collectors.joining(" ")));
-
-            Rank rank = new Rank(words,stemming);
+            ArrayList<String> additionalWords=new ArrayList<>();
+            if(ViewModel.isSemantic()){
+                additionalWords=getSemanticWords(words);
+                for(String s:additionalWords){//todo remove
+                    System.out.println("additional word: "+s);
+                }
+            }
+            Rank rank = new Rank(words,additionalWords,stemming);
             ArrayList<Integer> docs = rank.rankQuery();
 
+            //test
+            int i=1;
+            for(Integer doc:docs){
+                System.out.println("number"+i+": "+doc);
+                i++;
+            }
 
 
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     *
+     * @return
+     */
+    private ArrayList<String> getSemanticWords(ArrayList<String> words) {
+        ArrayList<String> result= new ArrayList<>();
+        try {
+            for (String word : words) {
+                String[] semanticWords = Semantic.getSemanticWords(word);
+                ArrayList<String> wordList = new ArrayList(Arrays.asList(semanticWords));
+                wordList.remove(0);
+                for(String s:wordList)
+                result.add(s);
+            }
+
+        }
+        catch (Exception e){
+
+        }
+        return result;
     }
 
     private String removeEntities(String query) {

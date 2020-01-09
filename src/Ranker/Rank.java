@@ -28,7 +28,7 @@ public class Rank {
      */
     final double b = 0.75;
     final double k1 = 1.5;
-    double avgDl = 100;//todo need to calculate
+    double avgDl;
     ViewModel viewModel=new ViewModel();
 
 
@@ -123,6 +123,7 @@ public class Rank {
         String postingFileName = values[1];
         int postingLine = Integer.parseInt(values[2]);
         ArrayList<String> posting=readPostingFile(ViewModel.getPathToOutput(),postingFileName);
+        System.out.println(ViewModel.getPathToOutput());
         String[] line = posting.get(postingLine).split(" ");
 
         while (postingLine < posting.size()-1) {//iterate all lines with the word

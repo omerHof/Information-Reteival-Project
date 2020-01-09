@@ -9,7 +9,7 @@ public class Semantic {
      * @param word
      * @return
      */
-    public String[] getSemanticWords(String word) {
+    public static String[] getSemanticWords(String word) {
     String stringWord = "";
     String[] result;
     StringBuilder stringBuilder = new StringBuilder();
