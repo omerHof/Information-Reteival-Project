@@ -3,11 +3,14 @@ package Searcher;
 import Application.ViewModel;
 import Parse.Parser;
 import Query.Semantic;
+import Query.docNum;
+import Query.initPartB;
 import Ranker.Rank;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,15 +53,17 @@ public class Searcher extends Thread  {
             }
             Rank rank = new Rank(words,additionalWords,stemming);
             ArrayList<Integer> docs = rank.rankQuery();
+            ArrayList<String> stringDocs=new ArrayList<>();
 
-            //test
-            int i=1;
+            HashMap<Integer,String> convert= initPartB.getDocNum();
             for(Integer doc:docs){
+                stringDocs.add(convert.get(doc));
+            }
+            int i=1;
+            for(String doc:stringDocs){
                 System.out.println("number"+i+": "+doc);
                 i++;
             }
-
-
 
         } catch (IOException e) {
             e.printStackTrace();
