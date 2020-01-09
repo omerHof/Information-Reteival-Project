@@ -48,7 +48,7 @@ public class InitProgram extends Thread implements ReadFileMethods {
      */
 
     public InitProgram(String pathForData, boolean stemming, String pathForPosting) throws IOException {
-        this.folders = new File(pathForData + "\\corpus").listFiles();
+        this.folders = new File(pathForData + "\\test").listFiles();
         this.pathForData = pathForData;
         this.pathForPosting = pathForPosting;
         this.stemming = stemming;

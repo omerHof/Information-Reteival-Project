@@ -92,7 +92,7 @@ public class SortedTablesThreads {
             if (  ((ArrayList<Integer>) entity.getValue()).size()>1){
                 ArrayList<Integer> arr = (ArrayList<Integer>) entity.getValue();
                 for(Integer docNum: arr){
-                    writer.write((String)entity.getKey() + " "+ docNum + " 0"+ System.lineSeparator());
+                    writer.write((String)entity.getKey() + " "+ docNum + " 1"+ System.lineSeparator());
                 }
             }
         }

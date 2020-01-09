@@ -8,8 +8,17 @@ public class QueryTest {
 
         //testForSingleQuery();
         //testForQueriesFile();
-        testForDocNum();
+        //testForDocNum();
+        testForEntity();
 
+    }
+
+    private static void testForEntity() {
+        String pathToOutput = "C:\\Users\\ohoff\\Documents\\הנדסת מערכות מידע\\שנה ג'\\סמסטר א\\3-אחזור מידע\\3-עבודות\\מנוע\\part2Output";
+        ViewModel viewModel = new ViewModel();
+        String pathToData = "C:\\Users\\ohoff\\Documents\\information retrieval\\corpus";
+        String query = "Omer Is All But The";
+        viewModel.functionsPartB(pathToData,pathToOutput,true,query);
     }
 
     private static void testForDocNum() {

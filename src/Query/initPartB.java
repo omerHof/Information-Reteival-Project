@@ -45,10 +45,10 @@ public class initPartB {
      */
     private void initInformation(String pathToOutput) {
         if (stemming) {
-            String pathDictionary =pathToOutput + "/postingStemming/Dictionary Metadata/dicMetaData.txt";
+            String pathDictionary =pathToOutput + "\\postingStemming\\Dictionary Metadata\\dicMetaData.txt";
             //String pathWordInDoc =pathToOutput + "/postingStemming/Dictionary Metadata/termsInDoc.txt";
-            String pathPopular =pathToOutput + "/postingStemming/Dictionary Metadata/amountOfPopularInDoc.txt";
-            String pathEntites =pathToOutput + "/postingStemming/Dictionary Metadata/entities.txt";
+            String pathPopular =pathToOutput + "\\postingStemming\\Dictionary Metadata\\amountOfPopularInDoc.txt";
+            String pathEntites =pathToOutput + "\\postingStemming\\Dictionary Metadata\\entities.txt";
             if (validFile(pathDictionary)&& validFile(pathPopular)){
                 File file = new File(pathDictionary);
                 readFileDictionary(file);

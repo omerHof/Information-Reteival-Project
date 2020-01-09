@@ -2,6 +2,7 @@ package Application;
 
 import Parse.Parser;
 import Query.DominantEntity;
+import Query.InitQuery;
 import Query.initPartB;
 import ReadFile.InitProgram;
 import invertedIndex.Dictionary;
@@ -115,17 +116,18 @@ public class ViewModel {
         dictionary.create();
         this.userDictionary = dictionary.saveInformation();
         SortedTablesThreads.setTableNum(0);
-        functionsPartB(pathToData,pathForDicMetadata,stemming);
+        String query = "people";
+        functionsPartB(pathToData,pathForDicMetadata,stemming,query);
     }
 
-    public void functionsPartB(String pathToData, String pathToOutput, boolean stemming){
+    public void functionsPartB(String pathToData, String pathToOutput, boolean stemming,String queryString){
+        setPathToData(pathToData);
+        setPathToOutput(pathToOutput);
         String pathToData1 = pathToData+"\\test";
         initPartB init = new initPartB(pathToData1,pathToOutput,stemming);
-        HashMap<String, ArrayList<Integer>> entities = initPartB.getEntities();
-        HashMap<String, String> dictionary = initPartB.getDictionary();
-        HashMap<Integer, Integer> totalWordsInDoc = initPartB.getTotalWordsInDoc();
-        HashMap<Integer, Integer> popularwWord = initPartB.getPopularwWord();
-        HashMap<Integer, String> docNum = initPartB.getDocNum();
+
+        InitQuery query = new InitQuery(queryString,true);
+        query.initSearcher();
 
 
 

@@ -216,8 +216,14 @@ public class Dictionary {
             pw.write(pair.getKey() + " " + pair.getValue() + "\r\n");
             Map.Entry pair1 = (Map.Entry) it1.next();
             pw1.write(pair1.getKey() + " " + pair1.getValue() + "\r\n");
-            Map.Entry pair2 = (Map.Entry) it2.next();
-            pw2.write(pair2.getKey()+ "|" +arrayAsString((ArrayList<Integer>) pair2.getValue())+"\r\n");
+
+        }
+        while(it2.hasNext()){
+            Map.Entry entity = (Map.Entry) it2.next();
+            if ( ((ArrayList<Integer>) entity.getValue()).size()>1){
+                ArrayList<Integer> arr = (ArrayList<Integer>) entity.getValue();
+                pw2.write(entity.getKey()+ "|" +arrayAsString(arr)+"\r\n");
+            }
         }
         pw.close();
         pw1.close();

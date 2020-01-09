@@ -1,6 +1,5 @@
 package Query;
 
-import ReadFile.ReadFileJsoup;
 import Searcher.Searcher;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -67,7 +66,8 @@ public class InitQuery {
 
         for (Element element : elements) {
             String queryToSend = element.getElementsByTag("title").text();
-            todo.add(Executors.callable(new Searcher(queryToSend, stemming)));
+            String queryNumber = element.text();
+            todo.add(Executors.callable(new Searcher(queryToSend,queryNumber, stemming)));
             //System.out.println(element.text());
         }
         try {
@@ -79,7 +79,7 @@ public class InitQuery {
     }
 
     private void search(String query) {
-        Searcher searcher = new Searcher(query,stemming);
+        Searcher searcher = new Searcher(query,"0",stemming);
         //excute parser and stuff...
 
     }
