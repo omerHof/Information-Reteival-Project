@@ -27,38 +27,41 @@ public class InitQuery {
 
     private String query;
     private boolean stemming;
+    private static int numberOfQueries;
+
 
     public InitQuery(String query, boolean stemming) {
         this.query = query;
         this.stemming = stemming;
+
     }
 
     /**
      * this method check if the user send a file or a single query, after the check sent to the relevant method.
      */
-    public void initSearcher(){
+    public void initSearcher() {
         File queries = new File(query);
-        if (queries.exists()){
+        if (queries.exists()) {
             //query is a file
             separateToQueries(queries);
-        }else{
+        } else {
             search(query);
         }
     }
 
 
-
-    private void separateToQueries(File query)  {
+    private void separateToQueries(File query) {
         //open the file and separate the queries
-        String queryWords= "";
-        try{
+        String queryWords = "";
+        try {
             queryWords = new String(Files.readAllBytes(Paths.get(query.getPath())));
-        }  catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
         Document html = Jsoup.parse(queryWords);
         Elements elements = html.getElementsByTag("num");
+        this.numberOfQueries = elements.size();
 
         ExecutorService threadPool = newFixedThreadPool(6);
         List<Callable<Object>> todo = new ArrayList<Callable<Object>>();
@@ -66,21 +69,36 @@ public class InitQuery {
 
         for (Element element : elements) {
             String queryToSend = element.getElementsByTag("title").text();
-            String queryNumber = element.text();
-            todo.add(Executors.callable(new Searcher(queryToSend,queryNumber, stemming)));
+            String queryNumber = element.childNode(0).toString();
+            queryNumber = getNumbersFromQuery(queryNumber);
+            todo.add(Executors.callable(new Searcher(queryToSend, queryNumber, stemming)));
             //System.out.println(element.text());
         }
         try {
             List<Future<Object>> answers = threadPool.invokeAll(todo);
-        } catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         threadPool.shutdown();
     }
 
     private void search(String query) {
-        Searcher searcher = new Searcher(query,"0",stemming);
+        Searcher searcher = new Searcher(query, "0", stemming);
         //excute parser and stuff...
 
+    }
+
+    private String getNumbersFromQuery(String queryNumber) {
+        String ans = "";
+        for (int i = 0; i < queryNumber.length(); i++) {
+            if (queryNumber.charAt(i) > 47 && queryNumber.charAt(i) < 58) {
+                ans += queryNumber.charAt(i);
+            }
+        }
+        return ans;
+    }
+
+    public static int getNumberOfQueries() {
+        return numberOfQueries;
     }
 }
