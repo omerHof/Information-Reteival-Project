@@ -20,11 +20,12 @@ import java.util.*;
  */
 public class ViewModel {
 
-    boolean stemming;
+    private boolean stemming;
+    private boolean semantic;
 
-    TreeMap<String, Integer> userDictionary;
-    static String pathToData;
-    static String pathToOutput;
+    private TreeMap<String, Integer> userDictionary;
+    private static String pathToData;
+    private static String pathToOutput;
 
     public ViewModel() {
         this.userDictionary = new TreeMap<>();
@@ -120,7 +121,7 @@ public class ViewModel {
         functionsPartB(pathToData,pathForDicMetadata,stemming,query);
     }
 
-    public void functionsPartB(String pathToData, String pathToOutput, boolean stemming,String queryString){
+    public void functionsPartB(String pathToData, String pathToOutput, boolean stemming,String queryString,boolean semantic){
         setPathToData(pathToData);
         setPathToOutput(pathToOutput);
         String pathToData1 = pathToData+"\\test";
