@@ -16,8 +16,9 @@ public class TestRank {
         ViewModel viewModel=new ViewModel();
         viewModel.functionsPartB("C:\\Users\\yszok\\Desktop\\temp\\data\\corpus","C:\\Users\\yszok\\Desktop\\temp\\posting folder",false);
         length=initPartB.getTotalWordsInDoc();
-        test1.add("politicians");
-        //test1.add("world");
+        test1.add("falkland");
+        test1.add("petroleum");
+        test1.add("exploration");
         //for(int i=0; i<1000000;i++){
         //    length.put(i,i);
         //}

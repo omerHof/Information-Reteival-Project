@@ -130,7 +130,7 @@ public class initPartB {
                 if (line == null) {
                     break;
                 }
-                term = line.split("|");
+                term = line.split("\\|");
 
                 String[] docEntities = term[1].split(",");
                 for(String str: docEntities){

@@ -37,7 +37,7 @@ public class docNum {
         docNum = new HashMap<>();
         totalWordsInDoc = new HashMap<>();
         int docIndexer=1;
-        File[] folders = new File(pathToData).listFiles();;
+        File[] folders = new File(pathToData).listFiles();
         for (File file : folders) {
             String doc = null;
             try{
