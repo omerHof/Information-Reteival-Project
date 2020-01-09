@@ -21,7 +21,7 @@ import java.util.*;
 public class ViewModel {
 
     private boolean stemming;
-    private boolean semantic;
+    private static boolean semantic;
 
     private TreeMap<String, Integer> userDictionary;
     private static String pathToData;
@@ -118,10 +118,11 @@ public class ViewModel {
         this.userDictionary = dictionary.saveInformation();
         SortedTablesThreads.setTableNum(0);
         String query = "people";
-        functionsPartB(pathToData,pathForDicMetadata,stemming,query);
+        //functionsPartB(pathToData,pathForDicMetadata,stemming,query);
     }
 
     public void functionsPartB(String pathToData, String pathToOutput, boolean stemming,String queryString,boolean semantic){
+        this.semantic = semantic;
         setPathToData(pathToData);
         setPathToOutput(pathToOutput);
         String pathToData1 = pathToData+"\\test";
@@ -261,5 +262,9 @@ public class ViewModel {
 
     public static void setPathToOutput(String pathToOutput) {
         ViewModel.pathToOutput = pathToOutput;
+    }
+
+    public static boolean isSemantic() {
+        return semantic;
     }
 }
