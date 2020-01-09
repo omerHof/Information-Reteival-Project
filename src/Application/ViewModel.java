@@ -115,10 +115,20 @@ public class ViewModel {
         dictionary.create();
         this.userDictionary = dictionary.saveInformation();
         SortedTablesThreads.setTableNum(0);
+        functionsPartB(pathToData,pathForDicMetadata,stemming);
     }
 
     public void functionsPartB(String pathToData, String pathToOutput, boolean stemming){
-        initPartB init = new initPartB(pathToData,pathToOutput,stemming);
+        String pathToData1 = pathToData+"\\test";
+        initPartB init = new initPartB(pathToData1,pathToOutput,stemming);
+        HashMap<String, ArrayList<Integer>> entities = initPartB.getEntities();
+        HashMap<String, String> dictionary = initPartB.getDictionary();
+        HashMap<Integer, Integer> totalWordsInDoc = initPartB.getTotalWordsInDoc();
+        HashMap<Integer, Integer> popularwWord = initPartB.getPopularwWord();
+        HashMap<Integer, String> docNum = initPartB.getDocNum();
+
+
+
     }
 
     public TreeMap<String, Integer> getUserDictionary() {

@@ -1,6 +1,7 @@
 package invertedIndex;
 
 import Parse.Parser;
+import Query.DominantEntity;
 
 import java.io.*;
 import java.util.*;
@@ -204,17 +205,36 @@ public class Dictionary {
         it = mappings3.iterator();
         it1 = mappings4.iterator();
 
+        FileWriter pw2 = new FileWriter(pathForDicMetadata+"/entities.txt", false);
+        HashMap<String, ArrayList<Integer>> entities = DominantEntity.getEntities();
+        Set<Map.Entry<String, ArrayList<Integer>>> entitiesToIterate = entities.entrySet();
+        Iterator it2 = entitiesToIterate.iterator();
+
         //write the files of the doc-amonunt of the most popular word doc and doc-amount of unique words
         while(it.hasNext() && it1.hasNext()){
             Map.Entry pair = (Map.Entry) it.next();
             pw.write(pair.getKey() + " " + pair.getValue() + "\r\n");
             Map.Entry pair1 = (Map.Entry) it1.next();
             pw1.write(pair1.getKey() + " " + pair1.getValue() + "\r\n");
+            Map.Entry pair2 = (Map.Entry) it2.next();
+            pw2.write(pair2.getKey()+ "|" +arrayAsString((ArrayList<Integer>) pair2.getValue())+"\r\n");
         }
         pw.close();
         pw1.close();
+        pw2.close();
 
         return sorted;
+    }
+
+    private String arrayAsString(ArrayList<Integer> docList) {
+        String result = "";
+        if(docList==null|| docList.isEmpty()){
+            return result;
+        }
+        for(int doc: docList){
+            result+= doc+",";
+        }
+        return result.substring(0,result.length()-1);
     }
 
     public HashMap<String, String> getDictionary() {

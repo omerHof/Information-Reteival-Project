@@ -4,18 +4,21 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class initPartB {
 
     boolean stemming;
-    private static HashMap<String,String> dictionary;
+    private static HashMap<String,String> dictionary = new HashMap<>();
 
-    private static HashMap<Integer,String> docNum;
+    private static HashMap<Integer,String> docNum = new HashMap<>();
 
-    private static HashMap<Integer,Integer> totalWordsInDoc;
+    private static HashMap<Integer,Integer> totalWordsInDoc = new HashMap<>();
 
-    private static HashMap<Integer,Integer> popularwWord;
+    private static HashMap<Integer,Integer> popularwWord = new HashMap<>();
+
+    private static HashMap<String, ArrayList<Integer>> entities = new HashMap<>();
 
 
     //load dictionary from memory
@@ -45,24 +48,34 @@ public class initPartB {
             String pathDictionary =pathToOutput + "/postingStemming/Dictionary Metadata/dicMetaData.txt";
             //String pathWordInDoc =pathToOutput + "/postingStemming/Dictionary Metadata/termsInDoc.txt";
             String pathPopular =pathToOutput + "/postingStemming/Dictionary Metadata/amountOfPopularInDoc.txt";
+            String pathEntites =pathToOutput + "/postingStemming/Dictionary Metadata/entities.txt";
             if (validFile(pathDictionary)&& validFile(pathPopular)){
                 File file = new File(pathDictionary);
                 readFileDictionary(file);
                 File file2 = new File(pathPopular);
                 readFilePopular(file2);
+                File file3 = new File(pathEntites);
+                readFileEntities(file3);
             }
         } else {
             String pathDictionary =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/dicMetaData.txt";
             //String pathWordInDoc =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/termsInDoc.txt";
-            String pathPopular =pathToOutput + "/postingStemming/Dictionary Metadata/amountOfPopularInDoc.txt";
+            String pathPopular =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/amountOfPopularInDoc.txt";
+            String pathEntites =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/entities.txt";
             if (validFile(pathDictionary)&& validFile(pathPopular)){
                 File file = new File(pathDictionary);
                 readFileDictionary(file);
                 File file2 = new File(pathPopular);
                 readFilePopular(file2);
+                File file3 = new File(pathEntites);
+                readFileEntities(file3);
+
             }
         }
+
     }
+
+
 
     /**
      * read the file word in doc to HashMap
@@ -106,6 +119,33 @@ public class initPartB {
         }
     }
 
+
+
+    private void readFileEntities(File file3) {
+        String[] term;
+        ArrayList<Integer> entitiesInDoc = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file3))) {
+            while (true) {
+                String line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                term = line.split("|");
+
+                String[] docEntities = term[1].split(",");
+                for(String str: docEntities){
+                    entitiesInDoc.add(Integer.parseInt(str));
+                }
+                this.entities.put(term[0],entitiesInDoc);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
     /**
      * this function check if a string of path of file is exist and valid
      * @param folderLocation
@@ -133,5 +173,9 @@ public class initPartB {
 
     public static HashMap<Integer, Integer> getPopularwWord() {
         return popularwWord;
+    }
+
+    public static HashMap<String, ArrayList<Integer>> getEntities() {
+        return entities;
     }
 }
