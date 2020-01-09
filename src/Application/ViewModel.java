@@ -2,6 +2,7 @@ package Application;
 
 import Parse.Parser;
 import Query.DominantEntity;
+import Query.InitQuery;
 import Query.initPartB;
 import ReadFile.InitProgram;
 import invertedIndex.Dictionary;
@@ -19,11 +20,12 @@ import java.util.*;
  */
 public class ViewModel {
 
-    boolean stemming;
+    private boolean stemming;
+    private boolean semantic;
 
-    TreeMap<String, Integer> userDictionary;
-    static String pathToData;
-    static String pathToOutput;
+    private TreeMap<String, Integer> userDictionary;
+    private static String pathToData;
+    private static String pathToOutput;
 
     public ViewModel() {
         this.userDictionary = new TreeMap<>();
@@ -115,17 +117,18 @@ public class ViewModel {
         dictionary.create();
         this.userDictionary = dictionary.saveInformation();
         SortedTablesThreads.setTableNum(0);
-        functionsPartB(pathToData,pathForDicMetadata,stemming);
+        String query = "people";
+        functionsPartB(pathToData,pathForDicMetadata,stemming,query);
     }
 
-    public void functionsPartB(String pathToData, String pathToOutput, boolean stemming){
-        String pathToData1 = pathToData;
+    public void functionsPartB(String pathToData, String pathToOutput, boolean stemming,String queryString,boolean semantic){
+        setPathToData(pathToData);
+        setPathToOutput(pathToOutput);
+        String pathToData1 = pathToData+"\\test";
         initPartB init = new initPartB(pathToData1,pathToOutput,stemming);
-        HashMap<String, ArrayList<Integer>> entities = initPartB.getEntities();
-        HashMap<String, String> dictionary = initPartB.getDictionary();
-        HashMap<Integer, Integer> totalWordsInDoc = initPartB.getTotalWordsInDoc();
-        HashMap<Integer, Integer> popularwWord = initPartB.getPopularwWord();
-        HashMap<Integer, String> docNum = initPartB.getDocNum();
+
+        InitQuery query = new InitQuery(queryString,true);
+        query.initSearcher();
 
 
 
@@ -159,31 +162,6 @@ public class ViewModel {
         return (!this.userDictionary.isEmpty());
     }
 
-    /**
-     * load the Dictionary from the disk to the memory
-     * @param text
-     * @param stemming
-     * @return
-     */
-    /*
-    public boolean loadDictionary(String text, boolean stemming) {
-        this.stemming = stemming;
-        if (stemming) {
-            String path = text + "/postingStemming/Dictionary Metadata/dicMetaData.txt";
-            if (validFile(path)){
-                File file = new File(path);
-                readFile(file);
-            }
-        } else {
-            String path =text + "/postingWithoutStemming/Dictionary Metadata/dicMetaData.txt";
-            if (validFile(path)){
-                File file = new File(path);
-                readFile(file);
-            }
-        }
-        return (!this.userDictionary.isEmpty());
-    }
-*/
     /**
      * this function calculated the number of docs that indexed
      * @param text
