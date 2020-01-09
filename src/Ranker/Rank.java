@@ -14,13 +14,19 @@ import java.util.*;
 public class Rank {
     ArrayList<String> words;
     HashMap<String, Double> scores;
+    ArrayList<Integer> result;
     boolean stemming;
     HashMap<String, String> dictionary;
-    HashMap<String, Integer> wordsInDoc;
+    //HashMap<String, Integer> wordsInDoc;
+    HashMap<Integer,Integer> docsLength;
+    HashMap<Integer,Integer> popularwWord;
 
+    /**
+     * Parameters
+     */
     final double b = 0.75;
     final double k1 = 1.5;
-    final double avgDl = 100;//todo need to calculate
+    double avgDl = 100;//todo need to calculate
     ViewModel viewModel=new ViewModel();
 
 
@@ -30,38 +36,72 @@ public class Rank {
      * @param words
      * @param stemming
      */
-    public Rank(ArrayList<String> words, boolean stemming) {
+    public Rank(ArrayList<String> words, boolean stemming,HashMap<Integer,Integer> docsLength) {
         this.words = words;
         this.scores = new HashMap<>();
         this.stemming = stemming;
         this.dictionary=new HashMap<>();
-        this.wordsInDoc=new HashMap<>();
+        //this.wordsInDoc=new HashMap<>();
+        this.popularwWord=new HashMap<>();
+        this.docsLength=docsLength;
+        this.result=new ArrayList<>();
+        this.avgDl=caculateAvarageLength(docsLength);
         initInformation(ViewModel.getPathToOutput());
     }
 
+    /**
+     * caculate Avarage Length of documents
+     * @param docsLength
+     * @return
+     */
+    private double caculateAvarageLength(HashMap<Integer, Integer> docsLength) {
+        int sum=0;
+        int mone=0;
+        Iterator it = docsLength.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            sum+=(int)pair.getValue();
+            mone++;
+        }
+        if(mone>0){
+            return sum/mone;
+        }
+        return 0;
+    }
+
+    /**
+     * read the meta data from the disk (stemming/without) using readFileDictionary and readFileWordInDoc
+     * @param pathToOutput
+     */
     private void initInformation(String pathToOutput) {
         if (stemming) {
             String pathDictionary =pathToOutput + "/postingStemming/Dictionary Metadata/dicMetaData.txt";
-            String pathWordInDoc =pathToOutput + "/postingStemming/Dictionary Metadata/termsInDoc.txt";
-            if (viewModel.validFile(pathDictionary)&&viewModel.validFile(pathWordInDoc)){
+            //String pathWordInDoc =pathToOutput + "/postingStemming/Dictionary Metadata/termsInDoc.txt";
+            String pathPopular =pathToOutput + "/postingStemming/Dictionary Metadata/amountOfPopularInDoc.txt";
+            if (viewModel.validFile(pathDictionary)&&viewModel.validFile(pathPopular)){
                 File file = new File(pathDictionary);
                 readFileDictionary(file);
-                File file2 = new File(pathWordInDoc);
-                readFileWordInDoc(file2);
+                File file2 = new File(pathPopular);
+                readFilePopular(file2);
             }
         } else {
             String pathDictionary =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/dicMetaData.txt";
-            String pathWordInDoc =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/termsInDoc.txt";
-            if (viewModel.validFile(pathDictionary)&&viewModel.validFile(pathWordInDoc)){
+            //String pathWordInDoc =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/termsInDoc.txt";
+            String pathPopular =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/amountOfPopularInDoc.txt";
+            if (viewModel.validFile(pathDictionary)&&viewModel.validFile(pathPopular)){
                 File file = new File(pathDictionary);
                 readFileDictionary(file);
-                File file2 = new File(pathWordInDoc);
-                readFileWordInDoc(file2);
+                File file2 = new File(pathPopular);
+                readFilePopular(file2);
             }
         }
     }
 
-    private void readFileWordInDoc(File file2) {
+    /**
+     * read the file word in doc to HashMap
+     * @param file2
+     */
+    private void readFilePopular(File file2) {
         String[] term;
         try (BufferedReader reader = new BufferedReader(new FileReader(file2))) {
             while (true) {
@@ -70,13 +110,16 @@ public class Rank {
                     break;
                 }
                 term = line.split(" ");
-                this.wordsInDoc.put(term[0],Integer.parseInt(term[1]));
+                this.popularwWord.put(Integer.parseInt(term[0]),Integer.parseInt(term[1]));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
+    /**
+     * read the file dictionary to HashMap
+     * @param file
+     */
     private void readFileDictionary(File file) {
         String[] term;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -97,17 +140,41 @@ public class Rank {
     }
 
     /**
-     * wrap function for iterate all words in query
+     * wrap function for iterate all words in query and sort
      * @return
      */
-    public HashMap<String, Double> rankQuery(){
+    public ArrayList<Integer> rankQuery(){
         for(String word:words){
-            mergeAndSort(rankWord(word));
+            merge(rankWord(word));
         }
         scores = sortByValue();
-        return scores;
+        result=prepareBestResult(scores);
+        return result;
     }
 
+    /**
+     * take the best 50 result to arrayList
+     * @param scores
+     * @return
+     */
+    private ArrayList<Integer> prepareBestResult(HashMap<String, Double> scores) {
+        ArrayList<Integer> result=new ArrayList<>();
+        int counter=0;
+        Iterator it = scores.entrySet().iterator();
+        while (it.hasNext()&&counter<50) {
+            Map.Entry pair = (Map.Entry)it.next();
+            int doc=Integer.parseInt((String)pair.getKey());
+            result.add(doc);
+            counter++;
+        }
+        return result;
+    }
+
+    /**
+     * rank documents by a word
+     * @param word
+     * @return
+     */
     public HashMap<String, Double> rankWord(String word) {
         double score;
         HashMap<String, Double> docScore=new HashMap<>();
@@ -123,11 +190,13 @@ public class Rank {
         String[] line = posting.get(postingLine).split(" ");
 
         while (postingLine < posting.size()-1) {//iterate all lines with the word
-            if(line!=null && calculateWord(line).equals(word)){
+            if(line!=null && calculateWord(line).equals(word)) {
                 int numberInDoc = (line[line.length - 1].split(",")).length;//number of times a word in specific doc
+                int firstLocation= Integer.parseInt(line[line.length - 1].split(",")[0]);
                 String doc = calculateDoc(line);
-                int numWordsInDoc = wordsInDoc.get(doc);
-                score = calculateScore(numOfDocs, numberInDoc, numWordsInDoc, b, k1, avgDl);
+                int popularDoc = popularwWord.get(Integer.parseInt(doc));
+                int numWordsInDoc = docsLength.get(Integer.parseInt(doc));
+                score = calculateScore(numOfDocs, numberInDoc, popularDoc, numWordsInDoc,firstLocation, b, k1, avgDl);
                 docScore.put(doc, score);
             }
             postingLine++;
@@ -136,6 +205,12 @@ public class Rank {
         return docScore;
     }
 
+    /**
+     * help to rankWord to rank the docs
+     * @param text
+     * @param postingFileName
+     * @return
+     */
     private ArrayList<String> readPostingFile(String text,String postingFileName) {
         if (stemming) {
             String path = text + "/postingStemming/posting/"+postingFileName+".txt";
@@ -172,13 +247,27 @@ public class Rank {
         return posting;
     }
 
-    private double calculateScore(int n, int numberInDoc, int numWordsInDoc, double b, double k1, double avgDl) {
-        double idf=(wordsInDoc.size()-n+0.5)/(n+0.5);
+    /**
+     * the equation of BM25
+     * @param n
+     * @param numberInDoc
+     * @param numWordsInDoc
+     * @param b
+     * @param k1
+     * @param avgDl
+     * @return
+     */
+    private double calculateScore(int n, int numberInDoc,int popular, int numWordsInDoc,int firstLocation, double b, double k1, double avgDl) {
+        double idf=(docsLength.size()-n+0.5)/(n+0.5);
         idf=Math.log(idf);
-        return idf*((numberInDoc*(k1+1))/numberInDoc+k1*(1-b+b*(numWordsInDoc/avgDl)));
+        return idf*((numberInDoc*(k1+1)/popular)/((numberInDoc/popular)*(firstLocation/numWordsInDoc)+k1*(1-b+b*(numWordsInDoc/avgDl))));
     }
 
-    private void mergeAndSort(HashMap<String, Double> score){
+    /**
+     * this function merge the score of the new doc to previous docs
+     * @param score
+     */
+    private void merge(HashMap<String, Double> score){
         if(score==null){
             return;
         }
@@ -198,6 +287,11 @@ public class Rank {
             }
         }
     }
+
+    /**
+     * sort the scores by the grades
+     * @return
+     */
     public HashMap<String, Double> sortByValue()
     {
         // Create a list from elements of HashMap
