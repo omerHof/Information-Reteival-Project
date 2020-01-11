@@ -122,22 +122,16 @@ public class Rank {
         int numOfDocs = Integer.parseInt(values[0]);
         String postingFileName = values[1];
         int postingLine = Integer.parseInt(values[2]);
-        ArrayList<String> posting=readPostingFile(ViewModel.getPathToOutput(),postingFileName);
-        System.out.println(ViewModel.getPathToOutput());
-        String[] line = posting.get(postingLine).split(" ");
-
-        while (postingLine < posting.size()-1) {//iterate all lines with the word
-            if(line!=null && calculateWord(line).equals(word)) {
-                int numberInDoc = (line[line.length - 1].split(",")).length;//number of times a word in specific doc
-                int firstLocation= Integer.parseInt(line[line.length - 1].split(",")[0]);
-                String doc = calculateDoc(line);
-                int popularDoc = popularwWord.get(Integer.parseInt(doc));
-                int numWordsInDoc = docsLength.get(Integer.parseInt(doc));
-                score = calculateScore(numOfDocs, numberInDoc, popularDoc, numWordsInDoc,firstLocation, b, k1, avgDl,constant);
-                docScore.put(doc, score);
-            }
-            postingLine++;
-            line = posting.get(postingLine).split(" ");
+        ArrayList<String> posting=readPostingFile(ViewModel.getPathToOutput(),postingFileName,numOfDocs,postingLine);
+        for(int i=0; i<posting.size(); i++) {
+            String[] line = posting.get(i).split(" ");
+            int numberInDoc = (line[line.length - 1].split(",")).length;//number of times a word in specific doc
+            int firstLocation = Integer.parseInt(line[line.length - 1].split(",")[0]);
+            String doc = calculateDoc(line);
+            int popularDoc = popularwWord.get(Integer.parseInt(doc));
+            int numWordsInDoc = docsLength.get(Integer.parseInt(doc));
+            score = calculateScore(numOfDocs, numberInDoc, popularDoc, numWordsInDoc, firstLocation, b, k1, avgDl, constant);
+            docScore.put(doc, score);
         }
         return docScore;
     }
@@ -148,18 +142,18 @@ public class Rank {
      * @param postingFileName
      * @return
      */
-    private ArrayList<String> readPostingFile(String text,String postingFileName) {
+    private ArrayList<String> readPostingFile(String text,String postingFileName, int numOfDocs,int postingLine) {
         if (stemming) {
             String path = text + "/postingStemming/posting/"+postingFileName+".txt";
             if (viewModel.validFile(path)){
                 File file = new File(path);
-                return readFile(file);
+                return readFile(file,numOfDocs,postingLine);
             }
         } else {
             String path =text + "/postingWithoutStemming/posting/"+postingFileName+".txt";
             if (viewModel.validFile(path)){
                 File file = new File(path);
-                return readFile(file);
+                return readFile(file,numOfDocs,postingLine);
             }
         }
         return null;
@@ -168,15 +162,25 @@ public class Rank {
      * this function get a file and read the data to the memory
      * @param file
      */
-    public ArrayList readFile (File file){
-        ArrayList<String>posting=new ArrayList<>();
+    public ArrayList readFile (File file, int numOfDocs,int postingLine) {
+        ArrayList<String> posting = new ArrayList<>();
+        String line=null;
+        int counter = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            while (true) {
-                String line = reader.readLine();
+            while (counter < postingLine + numOfDocs) {
+                while (counter < postingLine) {
+                    line = reader.readLine();
+                    counter++;
+                }
+                if (line == null) {
+                    break;
+                }
+                line = reader.readLine();
                 if (line == null) {
                     break;
                 }
                 posting.add(line);
+                counter++;
             }
         } catch (IOException e) {
             e.printStackTrace();
