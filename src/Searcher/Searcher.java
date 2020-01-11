@@ -47,22 +47,26 @@ public class Searcher extends Thread  {
                 queryWords = prepareInput(query);
                 queryWords.addAll(queryEntities);
             }
+
             if(description!=null){
-                ArrayList<String> descriptionEntities = getEntities(query);
-                descriptionWords = prepareInput(query);
+                ArrayList<String> descriptionEntities = getEntities(description);
+                descriptionWords = prepareInput(description);
                 descriptionWords.addAll(descriptionEntities);
             }
+
+
 
             System.out.println("FINISH PARSE query number:"+queryNumber );
             ArrayList<String> queryAdditionalWords=new ArrayList<>();
             ArrayList<String> descriptionAdditionalWords=new ArrayList<>();
+/*
             if(ViewModel.isSemantic()){
                 queryAdditionalWords=getSemanticWords(queryWords);
                 if(description!=null){
-                    descriptionAdditionalWords = getSemanticWords(descriptionWords);
+                    //descriptionAdditionalWords = getSemanticWords(descriptionWords);
                 }
             }
-
+*/
             Rank rank = new Rank(queryWords,queryAdditionalWords,descriptionWords,descriptionAdditionalWords,stemming);//todo change null to description
             ArrayList<Integer> docs = rank.rankQuery();
             System.out.println("FINISH RANK query number:"+queryNumber );

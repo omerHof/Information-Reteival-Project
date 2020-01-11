@@ -14,6 +14,7 @@ public class Rank {
     ArrayList<String> words;
     ArrayList<String> additionalWords;
     ArrayList<String> description;
+    ArrayList<String> additionalDescription;
     HashMap<String, Double> scores;
     ArrayList<Integer> result;
     boolean stemming;
@@ -41,6 +42,7 @@ public class Rank {
         this.words = words;
         this.additionalWords=words2;
         this.description=words3;
+        this.additionalDescription=descriptionAdditionalWords;
         this.scores = new HashMap<>();
         this.stemming = stemming;
         this.dictionary= initPartB.getDictionary();
@@ -76,7 +78,7 @@ public class Rank {
      * @return
      */
     public ArrayList<Integer> rankQuery(){
-        int constant=1;
+        double constant=1;
         for(String word:words){
             merge(rankWord(word,constant));
         }
@@ -118,6 +120,9 @@ public class Rank {
     public HashMap<String, Double> rankWord(String word,double constant) {
         double score;
         HashMap<String, Double> docScore=new HashMap<>();
+        if(!dictionary.containsKey(word)){
+            return docScore;
+        }
         String tempValue=dictionary.get(word);
         if(tempValue==null){
             return null;

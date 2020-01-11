@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class TestRank {
     public static void main(String[] args) throws IOException {
-
+/*
         ViewModel.setPathToOutput("C:\\Users\\yszok\\Desktop\\temp\\posting folder");
         ArrayList<Integer> result = new ArrayList<>();
         HashMap<Integer, Integer> length = new HashMap<>();
@@ -30,6 +30,7 @@ public class TestRank {
         for (int i = 0; i < result.size(); i++)
             System.out.println("place " + i + " is:" + result.get(i));
     }
-
+*/
+    }
 }
 

@@ -122,6 +122,8 @@ public class ViewModel {
         dictionary.create();
         this.userDictionary = dictionary.saveInformation(initProgram.getDocNum(),initProgram.getTotalWordsInDoc());
         SortedTablesThreads.setTableNum(0);
+        String query = "people";
+        //functionsPartB(pathToData,pathForDicMetadata,stemming,query);
     }
 
     public void run(String pathToData, String pathToOutput, boolean stemming, String queryString, boolean semantic){
@@ -134,7 +136,9 @@ public class ViewModel {
         setPathToOutput(pathToOutput);
         String pathToData1 = pathToData+"\\corpus";
         initPartB init = new initPartB(pathToData1,pathToOutput,stemming);
-        InitQuery query = new InitQuery(queryString,true);
+        DominantEntity dominantEntity= DominantEntity.getEntityListInstance(initPartB.getEntities());
+        dominantEntity.getDominantEntities(3);//todo
+        InitQuery query = new InitQuery(queryString,false);
         query.initSearcher();
 
         //results =  Results.getResultHashMap();
