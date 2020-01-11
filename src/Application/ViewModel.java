@@ -5,6 +5,7 @@ import Query.DominantEntity;
 import Query.InitQuery;
 import Query.initPartB;
 import ReadFile.InitProgram;
+import Searcher.Results;
 import invertedIndex.Dictionary;
 import invertedIndex.MergeSorter;
 import invertedIndex.SortedTablesThreads;
@@ -26,6 +27,9 @@ public class ViewModel {
     private TreeMap<String, Integer> userDictionary;
     private static String pathToData;
     private static String pathToOutput;
+    private static String query;
+    private static HashMap<String, ArrayList<String>> results;
+
 
     public ViewModel() {
         this.userDictionary = new TreeMap<>();
@@ -117,19 +121,22 @@ public class ViewModel {
         dictionary.create();
         this.userDictionary = dictionary.saveInformation();
         SortedTablesThreads.setTableNum(0);
-        String query = "people";
-        //functionsPartB(pathToData,pathForDicMetadata,stemming,query);
     }
 
     public void run(String pathToData, String pathToOutput, boolean stemming, String queryString, boolean semantic){
         this.semantic = semantic;
+        this.stemming = stemming;
+        this.pathToData = pathToData;
+        this.pathToOutput = pathToOutput;
+        this.query = queryString;
         setPathToData(pathToData);
         setPathToOutput(pathToOutput);
         String pathToData1 = pathToData+"\\corpus";
         initPartB init = new initPartB(pathToData1,pathToOutput,stemming);
-
         InitQuery query = new InitQuery(queryString,true);
         query.initSearcher();
+
+        results =  Results.getResultHashMap();
 
 
 

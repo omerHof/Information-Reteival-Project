@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.swing.*;
@@ -35,10 +36,13 @@ public class LandingController implements Initializable {
     private TextField textFieldQuery;
 
     @FXML
-    private CheckBox checkBoxStemming;
+    private CheckBox checkBoxSemantic;
 
     @FXML
-    private CheckBox checkBoxSemantic;
+    private CheckBox checkBoxStemming;
+
+
+
 
     private boolean stemming;
     private boolean semantic;
@@ -56,6 +60,8 @@ public class LandingController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         checkBoxStemming = new CheckBox();
         checkBoxStemming.setSelected(false);
+        checkBoxSemantic = new CheckBox();
+        checkBoxSemantic.setSelected(false);
         viewModel = new ViewModel();
     }
 
@@ -75,7 +81,7 @@ public class LandingController implements Initializable {
     }
 
     /**
-     * this function change the stemming value by the user choise
+     * this function change the semantic value by the user choise
      * @param actionEvent
      * @throws IOException
      */
@@ -123,19 +129,11 @@ public class LandingController implements Initializable {
      * @throws IOException
      */
     public void browseQueryFilePressed(ActionEvent actionEvent) throws IOException {
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "text file", "txt");
-        chooser.setFileFilter(filter);
-        int returnVal = chooser.showOpenDialog(null);
-        String queryFile = "";
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-            queryFile = chooser.getSelectedFile().getName();
-        }
+        FileChooser fileChooser = new FileChooser();
+        File selectedFile = fileChooser.showOpenDialog(Main.getStage());
 
-
-        if (queryFile!=null && !viewModel.validFolder(queryFile)){
-            textFieldQuery.setText(queryFile);
+        if (selectedFile!=null && !viewModel.validFolder(selectedFile.getAbsolutePath())){
+            textFieldQuery.setText(selectedFile.getAbsolutePath());
         }
     }
 
@@ -196,7 +194,7 @@ public class LandingController implements Initializable {
             semantic = false;
         }
 
-        viewModel.run(textFieldCorpus.getText(),textFieldPosting.getText(),stemming,textFieldPosting.getText(),semantic);
+        viewModel.run(textFieldCorpus.getText(),textFieldPosting.getText(),stemming,textFieldQuery.getText(),semantic);
     }
 
 

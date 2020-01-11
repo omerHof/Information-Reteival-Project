@@ -77,4 +77,10 @@ public class Results {
         }
         writer.close();
     }
+
+
+    public static HashMap<String, ArrayList<String>> getResultHashMap() {
+        HashMap<String, ArrayList<String>> hashMap = new HashMap<String, ArrayList<String>>(resultHashMap);
+        return hashMap;
+    }
 }

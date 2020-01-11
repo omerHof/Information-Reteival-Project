@@ -1,6 +1,7 @@
 package Query;
 
 import Searcher.Searcher;
+import Searcher.Results;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -63,7 +65,7 @@ public class InitQuery {
         Elements elements = html.getElementsByTag("num");
         this.numberOfQueries = elements.size();
 
-        ExecutorService threadPool = newFixedThreadPool(6);
+        ExecutorService threadPool = newFixedThreadPool(8);
         List<Callable<Object>> todo = new ArrayList<Callable<Object>>();
 
 
@@ -80,12 +82,14 @@ public class InitQuery {
             e.printStackTrace();
         }
         threadPool.shutdown();
+
+
     }
 
     private void search(String query) {
         this.numberOfQueries =1;
         Searcher searcher = new Searcher(query, "111", stemming);
-        //excute parser and stuff...
+
 
     }
 

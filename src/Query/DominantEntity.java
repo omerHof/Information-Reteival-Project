@@ -81,7 +81,7 @@ public class DominantEntity {
      * @return
      */
 
-        public static HashMap<String, Integer> sortByValue(HashMap<String, Integer> hm)
+        public static String[] sortByValue(HashMap<String, Integer> hm)
         {
             // Create a list from elements of HashMap
             List<Map.Entry<String, Integer> > list =
@@ -101,6 +101,30 @@ public class DominantEntity {
             for (Map.Entry<String, Integer> aa : list) {
                 temp.put(aa.getKey(), aa.getValue());
             }
-            return temp;
+            return (String[]) temp.keySet().toArray();
         }
+
+    /**
+     * main method - get document and return 5 dominant entity from it.
+
+     * @return
+     */
+    public static ArrayList<String> getDominantEntities(int docIndex){
+        ArrayList<String> dominateWordsToReturn = new ArrayList<>();
+        HashMap<String,Integer> tempEntities = new HashMap<>();
+
+        //sort tempMap
+        Iterator it = entities.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            int val = ((ArrayList<String>) pair.getValue()).size();
+            String key = (String) pair.getKey();
+            tempEntities.put(key,val);
+        }
+
+       String[] sortedEntities = sortByValue(tempEntities);
+        //itrate over the
+        for()
+    }
+
 }
