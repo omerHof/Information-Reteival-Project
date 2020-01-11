@@ -3,6 +3,8 @@ package Searcher;
 import Application.ViewModel;
 import Query.DominantEntity;
 import Query.InitQuery;
+import javafx.util.Pair;
+
 import javax.management.Query;
 import java.io.File;
 import java.io.FileWriter;
@@ -80,8 +82,16 @@ public class Results {
     }
 
 
-    public static HashMap<String, ArrayList<String>> getResultHashMap() {
-        HashMap<String, ArrayList<String>> hashMap = new HashMap<String, ArrayList<String>>(resultHashMap);
-        return hashMap;
+    public  ArrayList <Pair<String,String>> getResultHashMap() {
+        ArrayList<Pair<String, String>> ans = new ArrayList<>();
+        SortedSet<String> keys = new TreeSet<>(resultHashMap.keySet());
+        for (String key : keys) {
+            ArrayList<String> value = resultHashMap.get(key);
+            for (String result : value) {
+                Pair<String, String> pair = new Pair<>(key, result);
+                ans.add(pair);
+            }
+        }
+        return ans;
     }
 }

@@ -47,14 +47,17 @@ public class Searcher extends Thread  {
                 queryWords = prepareInput(query);
                 queryWords.addAll(queryEntities);
             }
-/*
+
+            /*
             if(description!=null){
                 ArrayList<String> descriptionEntities = getEntities(description);
                 descriptionWords = prepareInput(description);
                 descriptionWords.addAll(descriptionEntities);
             }
 
-*/
+             */
+
+
 
             System.out.println("FINISH PARSE query number:"+queryNumber );
             ArrayList<String> queryAdditionalWords=new ArrayList<>();

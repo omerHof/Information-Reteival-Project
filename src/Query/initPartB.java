@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class initPartB {
 
@@ -69,8 +71,8 @@ public class initPartB {
             //String pathWordInDoc =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/termsInDoc.txt";
             String pathPopular =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/amountOfPopularInDoc.txt";
             String pathEntites =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/entities.txt";
-            String pathDocNum = pathToOutput+ "/postingWithoutStemming/Dictionary Metadata/docNum";
-            String pathTotalWords = pathToOutput+"/postingWithoutStemming/Dictionary Metadata/TotalWordsInDoc";
+            String pathDocNum = pathToOutput+ "/postingWithoutStemming/Dictionary Metadata/docNum.txt";
+            String pathTotalWords = pathToOutput+"/postingWithoutStemming/Dictionary Metadata/TotalWordsInDoc.txt";
             if (validFile(pathDictionary)&& validFile(pathPopular)){
                 File file = new File(pathDictionary);
                 readFileDictionary(file);
@@ -238,6 +240,15 @@ public class initPartB {
             return true;
         }
         return false;
+    }
+
+    public static int getKeyByValue(String value) {
+        for (Map.Entry<java.lang.Integer, java.lang.String> entry : docNum.entrySet()) {
+            if (value.equals(entry.getValue())) {
+                return (Integer) entry.getKey();
+            }
+        }
+        return 0;
     }
 
     public static HashMap<String, String> getDictionary() {

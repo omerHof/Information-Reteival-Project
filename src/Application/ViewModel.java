@@ -9,6 +9,8 @@ import Searcher.Results;
 import invertedIndex.Dictionary;
 import invertedIndex.MergeSorter;
 import invertedIndex.SortedTablesThreads;
+import javafx.scene.control.Alert;
+import javafx.util.Pair;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -28,7 +30,7 @@ public class ViewModel {
     private static String pathToData;
     private static String pathToOutput;
     private static String query;
-    private static HashMap<String, ArrayList<String>> results;
+    private static ArrayList <Pair<String,String>> results;
 
 
     public ViewModel() {
@@ -141,7 +143,9 @@ public class ViewModel {
         InitQuery query = new InitQuery(queryString,false);
         query.initSearcher();
 
-        //results =  Results.getResultHashMap();
+        Results results1 = Results.getResultsInstance();
+        results =  results1.getResultHashMap();
+
 
 
 
@@ -278,5 +282,39 @@ public class ViewModel {
 
     public static boolean isSemantic() {
         return semantic;
+    }
+
+    public static ArrayList <Pair<String,String>> getResults() {
+        return results;
+    }
+
+
+    public void writeResultFile(String fileLocation) throws IOException {
+
+        FileWriter writer = new FileWriter(new File(fileLocation +"//results.txt"));
+        ArrayList<String> writeResult = new ArrayList<>();
+        float flo = 42;
+        for (Pair<String,String> pair : results) {
+            writeResult.add(pair.getKey() + " 0 "+ pair.getValue()+ " 0 "+ flo+ " mt" );
+        }
+
+        for (String str : writeResult) {
+            writer.write(str + System.lineSeparator());
+        }
+        writer.close();
+    }
+
+    public ArrayList<String> getEntities(String text) {
+        if (text==null){
+            return null;
+        }
+        int docIndex = initPartB.getKeyByValue(text);
+        if(docIndex!=0){
+            return DominantEntity.getDominantEntities(docIndex);
+
+        }else{
+
+        }
+        return null;
     }
 }
