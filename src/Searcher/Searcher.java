@@ -49,7 +49,7 @@ public class Searcher extends Thread  {
             if(ViewModel.isSemantic()){
                 additionalWords=getSemanticWords(words);
             }
-            Rank rank = new Rank(words,additionalWords,stemming);
+            Rank rank = new Rank(words,additionalWords,null,stemming);//todo change null to description
             ArrayList<Integer> docs = rank.rankQuery();
             System.out.println("FINISH RANK query number:"+queryNumber );
             ArrayList<String> stringDocs=new ArrayList<>();

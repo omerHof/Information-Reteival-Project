@@ -15,6 +15,7 @@ import java.util.*;
 public class Rank {
     ArrayList<String> words;
     ArrayList<String> additionalWords;
+    ArrayList<String> description;
     HashMap<String, Double> scores;
     ArrayList<Integer> result;
     boolean stemming;
@@ -26,7 +27,7 @@ public class Rank {
     /**
      * Parameters
      */
-    final double b = 0.75;
+    final double b = 0.1;
     final double k1 = 1.5;
     double avgDl;
     ViewModel viewModel=new ViewModel();
@@ -38,9 +39,10 @@ public class Rank {
      * @param words
      * @param stemming
      */
-    public Rank(ArrayList<String> words,ArrayList<String> words2, boolean stemming) {
+    public Rank(ArrayList<String> words,ArrayList<String> words2,ArrayList<String> words3, boolean stemming) {
         this.words = words;
         this.additionalWords=words2;
+        this.description=words3;
         this.scores = new HashMap<>();
         this.stemming = stemming;
         this.dictionary= initPartB.getDictionary();
@@ -83,6 +85,9 @@ public class Rank {
         for(String word:additionalWords){
             merge(rankWord(word,constant/3));
         }
+        for(String word:description){
+            merge(rankWord(word,constant/3));
+        }
         scores = sortByValue();
         result=prepareBestResult(scores);
         return result;
@@ -98,6 +103,7 @@ public class Rank {
         int counter=0;
         Iterator it = scores.entrySet().iterator();
         while (it.hasNext()&&counter<50) {
+        //while (it.hasNext()){
             Map.Entry pair = (Map.Entry)it.next();
             int doc=Integer.parseInt((String)pair.getKey());
             result.add(doc);
@@ -111,7 +117,7 @@ public class Rank {
      * @param word
      * @return
      */
-    public HashMap<String, Double> rankWord(String word,int constant) {
+    public HashMap<String, Double> rankWord(String word,double constant) {
         double score;
         HashMap<String, Double> docScore=new HashMap<>();
         String tempValue=dictionary.get(word);
@@ -198,10 +204,10 @@ public class Rank {
      * @param avgDl
      * @return
      */
-    private double calculateScore(int n, int numberInDoc,int popular, int numWordsInDoc,int firstLocation, double b, double k1, double avgDl,int constant) {
+    private double calculateScore(int n, int numberInDoc,int popular, int numWordsInDoc,int firstLocation, double b, double k1, double avgDl,double constant) {
         double idf=(docsLength.size()-n+0.5)/(n+0.5);
         idf=Math.log(idf);
-        return constant*idf*((numberInDoc*(k1+1)/popular)/((numberInDoc/popular)*(firstLocation/numWordsInDoc)+k1*(1-b+b*(numWordsInDoc/avgDl))));
+        return constant*idf*((numberInDoc*(k1+1)/*/popular*/)/((numberInDoc/*/popular*/)+k1*(1-b+b*(numWordsInDoc/avgDl))));
     }
 
     /**

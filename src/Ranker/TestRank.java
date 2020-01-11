@@ -15,14 +15,16 @@ public class TestRank {
         HashMap<Integer, Integer> length = new HashMap<>();
         ArrayList<String> test1 = new ArrayList<>();
         ViewModel viewModel = new ViewModel();
-        viewModel.functionsPartB("C:\\Users\\yszok\\Desktop\\temp\\data", "C:\\Users\\yszok\\Desktop\\temp\\posting folder", false, "ocean people", false);
+        viewModel.run("C:\\Users\\yszok\\Desktop\\temp\\data", "C:\\Users\\yszok\\Desktop\\temp\\posting folder", false, "ocean people", false);
         length = initPartB.getTotalWordsInDoc();
         test1.add("ocean");
         test1.add("people");
         //for(int i=0; i<1000000;i++){
         //    length.put(i,i);
         //}
-        Rank rank = new Rank(test1, null, false);
+        ArrayList<String>word2 = new ArrayList<>();
+        ArrayList<String>word3 = new ArrayList<>();
+        Rank rank = new Rank(test1, word2,word3, false);
         result = rank.rankQuery();
         System.out.println("finish ranking");
         for (int i = 0; i < result.size(); i++)
