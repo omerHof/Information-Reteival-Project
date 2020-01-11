@@ -52,6 +52,7 @@ public class Results {
             queriesCounter++;
             lock=true;
 
+
         }
         if(InitQuery.getNumberOfQueries()<=queriesCounter){
             writeToFile();
