@@ -2,6 +2,7 @@ package ReadFile;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.File;
@@ -35,7 +36,9 @@ public class InitProgram extends Thread implements ReadFileMethods {
     private String pathForPrePosting;
     private String pathForDicMetadata;
     private String pathToReturn;
+    private HashMap<Integer,String> docNum;
 
+    private HashMap<Integer,Integer> totalWordsInDoc;
 
     private ArrayList<Integer> docIndexer;
     ArrayList<ReadFileJsoup> threadList = new ArrayList<>();
@@ -56,6 +59,8 @@ public class InitProgram extends Thread implements ReadFileMethods {
         createFolders();
         this.docIndexer = new ArrayList<>();
         this.threadList = new ArrayList<>();
+        docNum = new HashMap<>();
+        totalWordsInDoc = new HashMap<>();
     }
 
     /**
@@ -131,12 +136,25 @@ public class InitProgram extends Thread implements ReadFileMethods {
      */
     public String splitToDocs() throws IOException, InterruptedException {
         docIndexer.add(1);
+        int docCounter=1;
         for (File file : folders) {
 
             String doc = null;
             doc = new String(Files.readAllBytes(Paths.get(file.getPath() + "\\" + file.getName())));
             Document html = Jsoup.parse(doc);
             Elements elements = html.getElementsByTag("DOC");
+            for(Element element:elements){
+                Elements docNumber = element.getElementsByTag("DOCNO");
+                Elements docText = element.getElementsByTag("TEXT");
+                docNum.put(docCounter,docNumber.first().text());
+                if(docText.first()!=null){
+                    totalWordsInDoc.put(docCounter,getNumberWordsInDoc(docText.first().text()));
+                }
+
+                docCounter++;
+            }
+
+
             int docNumber = docIndexer.get(docIndexer.size() - 1) + elements.size();
             docIndexer.add(docNumber);
 
@@ -165,5 +183,18 @@ public class InitProgram extends Thread implements ReadFileMethods {
             return true;
         }
         return false;
+    }
+
+    private int getNumberWordsInDoc(String doc){
+        String[] allWords = doc.split(" ");
+        return allWords.length;
+    }
+
+    public HashMap<Integer, String> getDocNum() {
+        return docNum;
+    }
+
+    public HashMap<Integer, Integer> getTotalWordsInDoc() {
+        return totalWordsInDoc;
     }
 }

@@ -171,8 +171,10 @@ public class Dictionary {
      * this function write to the disk information about rhe posting files, terms and docs.
      * @return
      * @throws IOException
+     * @param docNum
+     * @param totalWordsInDoc
      */
-    public TreeMap<String, Integer> saveInformation() throws IOException {
+    public TreeMap<String, Integer> saveInformation(HashMap<Integer, String> docNum, HashMap<Integer, Integer> totalWordsInDoc) throws IOException {
         TreeMap<String, Integer> sorted = new TreeMap<>(userDictionary);
         Set<Map.Entry<String, Integer>> mappings = sorted.entrySet();
         TreeMap<String, String> sorted2 = new TreeMap<>(dictionary);
@@ -218,6 +220,11 @@ public class Dictionary {
             pw1.write(pair1.getKey() + " " + pair1.getValue() + "\r\n");
 
         }
+
+        pw.close();
+        pw1.close();
+
+
         while(it2.hasNext()){
             Map.Entry entity = (Map.Entry) it2.next();
             if ( ((ArrayList<Integer>) entity.getValue()).size()>1){
@@ -228,9 +235,27 @@ public class Dictionary {
 
             }
         }
+        pw2.close();
+
+        pw = new FileWriter(pathForDicMetadata+"/docNum.txt", false);
+        pw1 = new FileWriter(pathForDicMetadata+"/TotalWordsInDoc.txt", false);
+        Set<Map.Entry<Integer,String>> DocNumToIterate = docNum.entrySet();
+        Set<Map.Entry<Integer,Integer>> totalWordsInDocIterate = totalWordsInDoc.entrySet();
+
+        it = DocNumToIterate.iterator();
+        it1 = totalWordsInDocIterate.iterator();
+
+        while(it.hasNext() && it1.hasNext()){
+            Map.Entry pair = (Map.Entry) it.next();
+            pw.write(pair.getKey() + " " + pair.getValue() + "\r\n");
+            Map.Entry pair1 = (Map.Entry) it1.next();
+            pw1.write(pair1.getKey() + " " + pair1.getValue() + "\r\n");
+
+        }
+
         pw.close();
         pw1.close();
-        pw2.close();
+
 
         return sorted;
     }

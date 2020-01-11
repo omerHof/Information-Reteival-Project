@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -72,7 +73,8 @@ public class InitQuery {
         for (Element element : elements) {
             String queryToSend = element.getElementsByTag("title").text();
             String descriptionToSend = element.getElementsByTag("desc").text();
-            descriptionToSend = descriptionToSend.substring(13);
+            descriptionToSend = justDescription(descriptionToSend);
+
             String queryNumber = element.childNode(0).toString();
             queryNumber = getNumbersFromQuery(queryNumber);
             todo.add(Executors.callable(new Searcher(queryToSend, queryNumber, stemming,descriptionToSend)));
@@ -86,6 +88,20 @@ public class InitQuery {
         threadPool.shutdown();
 
 
+    }
+
+    private String justDescription(String descriptionToSend) {
+        String res="";
+        String temp[] = descriptionToSend.split(" ");
+        List<String> al = new ArrayList<String>();
+        al =  Arrays.asList(temp);
+        for(String str:al){
+            if(str.equals("Narrative:")){
+                break;
+            }
+            res +=str+" ";
+        }
+        return res.substring(0,res.length()-1);
     }
 
     private void search(String query) {

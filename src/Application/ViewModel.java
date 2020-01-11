@@ -49,7 +49,7 @@ public class ViewModel {
         this.pathToOutput = output;
         InitProgram initProgram = new InitProgram(input, stemming, output);
         String pathForPosting = initProgram.splitToDocs();
-        createIndex(pathForPosting);
+        createIndex(pathForPosting,initProgram);
     }
 
     /**
@@ -85,9 +85,10 @@ public class ViewModel {
     /**
      * this function help to execute to create the index
      * @param pathForPosting
+     * @param initProgram
      * @throws IOException
      */
-    public void createIndex(String pathForPosting) throws IOException {
+    public void createIndex(String pathForPosting, InitProgram initProgram) throws IOException {
         String pathForPrePosting = "";
         if (stemming) {
             pathForPrePosting = "stemming";
@@ -119,7 +120,7 @@ public class ViewModel {
         String pathForDicMetadata = pathForPosting + "\\Dictionary Metadata";
         Dictionary dictionary = new Dictionary(listOfFiles[0], pathForDicPosting, pathForDicMetadata);
         dictionary.create();
-        this.userDictionary = dictionary.saveInformation();
+        this.userDictionary = dictionary.saveInformation(initProgram.getDocNum(),initProgram.getTotalWordsInDoc());
         SortedTablesThreads.setTableNum(0);
     }
 
@@ -136,7 +137,7 @@ public class ViewModel {
         InitQuery query = new InitQuery(queryString,true);
         query.initSearcher();
 
-        results =  Results.getResultHashMap();
+        //results =  Results.getResultHashMap();
 
 
 

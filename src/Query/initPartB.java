@@ -28,7 +28,7 @@ public class initPartB {
     public initPartB(String pathToData, String pathToOutput, boolean stemming){
         this.stemming = stemming;
         initInformation(pathToOutput);
-        getDocNumInformation(pathToData);
+        //getDocNumInformation(pathToData);
     }
 
 
@@ -49,6 +49,9 @@ public class initPartB {
             //String pathWordInDoc =pathToOutput + "/postingStemming/Dictionary Metadata/termsInDoc.txt";
             String pathPopular =pathToOutput + "\\postingStemming\\Dictionary Metadata\\amountOfPopularInDoc.txt";
             String pathEntites =pathToOutput + "\\postingStemming\\Dictionary Metadata\\entities.txt";
+            String pathDocNum = pathToOutput+ "\\postingStemming\\Dictionary Metadata\\docNum";
+            String pathTotalWords = pathToOutput+"\\postingStemming\\Dictionary Metadata\\TotalWordsInDoc";
+
             if (validFile(pathDictionary)&& validFile(pathPopular)){
                 File file = new File(pathDictionary);
                 readFileDictionary(file);
@@ -56,12 +59,18 @@ public class initPartB {
                 readFilePopular(file2);
                 File file3 = new File(pathEntites);
                 readFileEntities(file3);
+                File file4 = new File(pathDocNum);
+                readFileDucNum(file4);
+                File file5 = new File(pathTotalWords);
+                readFileTotalWords(file5);
             }
         } else {
             String pathDictionary =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/dicMetaData.txt";
             //String pathWordInDoc =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/termsInDoc.txt";
             String pathPopular =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/amountOfPopularInDoc.txt";
             String pathEntites =pathToOutput + "/postingWithoutStemming/Dictionary Metadata/entities.txt";
+            String pathDocNum = pathToOutput+ "/postingWithoutStemming/Dictionary Metadata/docNum";
+            String pathTotalWords = pathToOutput+"/postingWithoutStemming/Dictionary Metadata/TotalWordsInDoc";
             if (validFile(pathDictionary)&& validFile(pathPopular)){
                 File file = new File(pathDictionary);
                 readFileDictionary(file);
@@ -69,6 +78,11 @@ public class initPartB {
                 readFilePopular(file2);
                 File file3 = new File(pathEntites);
                 readFileEntities(file3);
+                File file4 = new File(pathDocNum);
+                readFileDucNum(file4);
+                File file5 = new File(pathTotalWords);
+                readFileTotalWords(file5);
+
 
             }
         }
@@ -154,6 +168,62 @@ public class initPartB {
         }
 
     }
+
+    /**
+     * read the file word in doc to HashMap
+     * @param file4
+     */
+    private void readFileDucNum(File file4) {
+        String[] term;
+        int lineNumber = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file4))) {
+            while (true) {
+                String line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                term = line.split(" ");
+                lineNumber++;
+                System.out.println(lineNumber);
+
+                if (term[0].equals("null") || term[1].equals("null")) {
+                    break;
+                }
+                this.docNum.put(Integer.parseInt(term[0]), term[1]);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * read the file word in doc to HashMap
+     * @param file5
+     */
+    private void readFileTotalWords(File file5) {
+        String[] term;
+        int lineNumber = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file5))) {
+            while (true) {
+                String line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                term = line.split(" ");
+                lineNumber++;
+                System.out.println(lineNumber);
+
+                if(term[0].equals("null")|| term[1].equals("null")){
+                    break;
+                }
+                this.totalWordsInDoc.put(Integer.parseInt(term[0]),Integer.parseInt(term[1]));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 
 
