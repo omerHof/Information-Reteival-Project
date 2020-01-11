@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static Searcher.Results.getResultsInstance;
+
 /**
  * this class will get a query and return list of ranked documents match to the query.
  */
@@ -64,6 +66,8 @@ public class Searcher extends Thread  {
                 System.out.println("number"+i+": "+doc);
                 i++;
             }
+            Results results = Results.getResultsInstance();
+            results.insertToResultList(stringDocs,queryNumber);
 
         } catch (IOException e) {
             e.printStackTrace();

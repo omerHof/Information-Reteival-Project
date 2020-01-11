@@ -83,6 +83,7 @@ public class InitQuery {
     }
 
     private void search(String query) {
+        this.numberOfQueries =1;
         Searcher searcher = new Searcher(query, "0", stemming);
         //excute parser and stuff...
 

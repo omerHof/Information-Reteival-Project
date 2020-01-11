@@ -7,24 +7,26 @@ import javax.management.Query;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Results {
 
     private static Results results;
     private static boolean lock;
     private static ArrayList<String> resultsArray;
+    private static ConcurrentHashMap<String,ArrayList<String>> resultHashMap;
     private static BlockingQueue<String> queue;
     private static String queryNumber;
     private static int queriesCounter;
 
     private Results() {
-        queue = new ArrayBlockingQueue(10000);
+        //queue = new ArrayBlockingQueue(10000);
+        resultHashMap = new ConcurrentHashMap<>();
         lock = true;
+        queriesCounter=0;
 
     }
 
@@ -45,23 +47,29 @@ public class Results {
         }
         if(lock){
             lock=false;
-            for(String docName: resultsArray) {
-                queue.add(queryNumber+ " 0"+ docName+ " 0");
-            }
+            resultHashMap.put(queryNumber,resultsArray);
+            queriesCounter++;
             lock=true;
+
         }
-        if(InitQuery.getNumberOfQueries()==queriesCounter){
-            writeToFile(queue);
+        if(InitQuery.getNumberOfQueries()<=queriesCounter){
+            writeToFile();
         }
     }
 
-    private void writeToFile(BlockingQueue<String> queue) throws IOException {
-
-        String[] arr = queue.toArray(new String[queue.size()]);
-        queue.clear();
-        //Arrays.sort(arr);
+    private void writeToFile() throws IOException {
         FileWriter writer = new FileWriter(new File(ViewModel.getPathToOutput() +"//results.txt"));
-        for (String str : arr) {
+        SortedSet<String> keys = new TreeSet<>(resultHashMap.keySet());
+        ArrayList<String> writeResult = new ArrayList<>();
+        for (String key : keys) {
+            ArrayList<String> value = resultHashMap.get(key);
+            for(String result: value){
+                writeResult.add(key + " 0 "+ result+ " 0");
+            }
+
+        }
+
+        for (String str : writeResult) {
             writer.write(str + System.lineSeparator());
         }
         writer.close();
