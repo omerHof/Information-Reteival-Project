@@ -62,6 +62,7 @@ public class InitQuery {
             e.printStackTrace();
         }
 
+
         Document html = Jsoup.parse(queryWords);
         Elements elements = html.getElementsByTag("num");
         this.numberOfQueries = elements.size();
