@@ -43,6 +43,7 @@ public class DominantEntity {
      * @param stemming
      * @return
      */
+    /*
     public static ArrayList<String> getDominantEntities(String doc, boolean stemming){
         ArrayList<String> dominateWordsToReturn = new ArrayList<>();
         try{
@@ -74,34 +75,35 @@ public class DominantEntity {
 
         return dominateWordsToReturn;
     }
-
+*/
     /**
      * help function to main method, sort the list of entities by number of occurrences.
      * @param hm
      * @return
      */
 
-        public static String[] sortByValue(HashMap<String, Integer> hm)
+        public static ArrayList<String> sortByValue(HashMap<String, Integer> hm)
         {
             // Create a list from elements of HashMap
-            List<Map.Entry<String, Integer> > list =
-                    new LinkedList<Map.Entry<String, Integer> >(hm.entrySet());
+            List<Map.Entry<String, Integer> > list =new LinkedList<Map.Entry<String, Integer> >(hm.entrySet());
+            ArrayList<String> result= new ArrayList<>();
 
             // Sort the list
             Collections.sort(list, new Comparator<Map.Entry<String, Integer> >() {
                 public int compare(Map.Entry<String, Integer> o1,
                                    Map.Entry<String, Integer> o2)
                 {
-                    return (o1.getValue()).compareTo(o2.getValue());
+                    return (o2.getValue()).compareTo(o1.getValue());
                 }
             });
 
             // put data from sorted list to hashmap
             HashMap<String, Integer> temp = new LinkedHashMap<String, Integer>();
             for (Map.Entry<String, Integer> aa : list) {
-                temp.put(aa.getKey(), aa.getValue());
+                //temp.put(aa.getKey(), aa.getValue());
+                result.add(aa.getKey());
             }
-            return (String[]) temp.keySet().toArray();
+            return result;
         }
 
     /**
@@ -111,6 +113,7 @@ public class DominantEntity {
      */
     public static ArrayList<String> getDominantEntities(int docIndex){
         ArrayList<String> dominateWordsToReturn = new ArrayList<>();
+        int numOfEntities=0;
         HashMap<String,Integer> tempEntities = new HashMap<>();
 
         //sort tempMap
@@ -122,9 +125,18 @@ public class DominantEntity {
             tempEntities.put(key,val);
         }
 
-       String[] sortedEntities = sortByValue(tempEntities);
+        ArrayList<String> sortedEntities = sortByValue(tempEntities);
         //itrate over the
-        for()
-    }
+        for(String entity : sortedEntities){
+            if(entities.get(entity).contains(docIndex)){
+                dominateWordsToReturn.add(entity);
+                numOfEntities++;
+                if(numOfEntities==5){
+                    return dominateWordsToReturn;
+                }
+            }
 
+        }
+        return dominateWordsToReturn;
+    }
 }
