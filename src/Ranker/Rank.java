@@ -3,8 +3,6 @@ package Ranker;
 
 import Application.ViewModel;
 import Query.initPartB;
-import invertedIndex.Dictionary;
-import javafx.application.Application;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,11 +33,11 @@ public class Rank {
 
     /**
      * constructor
-     *
-     * @param words
+     *  @param words
+     * @param descriptionAdditionalWords
      * @param stemming
      */
-    public Rank(ArrayList<String> words,ArrayList<String> words2,ArrayList<String> words3, boolean stemming) {
+    public Rank(ArrayList<String> words, ArrayList<String> words2, ArrayList<String> words3, ArrayList<String> descriptionAdditionalWords, boolean stemming) {
         this.words = words;
         this.additionalWords=words2;
         this.description=words3;

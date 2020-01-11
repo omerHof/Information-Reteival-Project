@@ -25,11 +25,13 @@ public class Searcher extends Thread  {
     private String query;
     private boolean stemming;
     private String queryNumber;
+    private String description;
 
-    public Searcher(String query, String queryNumber, boolean stemming) {
+    public Searcher(String query, String queryNumber, boolean stemming, String description) {
         this.query = query;
         this.stemming = stemming;
         this.queryNumber = queryNumber;
+        this.description = description;
     }
 
     /**
@@ -38,18 +40,30 @@ public class Searcher extends Thread  {
     public void run()  {
 
         try {
-            ArrayList<String> entities = getEntities(query);
-            query = removeEntities(query);
-            Parser parser = new Parser(0,query, ViewModel.getPathToData(),stemming,true);
-            parser.parse();
-            ArrayList<String> words = parser.getQueryWord();
-            words.addAll(entities);
-            System.out.println("FINISH PARSE query number:"+queryNumber );
-            ArrayList<String> additionalWords=new ArrayList<>();
-            if(ViewModel.isSemantic()){
-                additionalWords=getSemanticWords(words);
+            ArrayList<String> queryWords = new ArrayList<>();
+            ArrayList<String> descriptionWords = new ArrayList<>();
+            if(query!=null){
+                ArrayList<String> queryEntities = getEntities(query);
+                queryWords = prepareInput(query);
+                queryWords.addAll(queryEntities);
             }
-            Rank rank = new Rank(words,additionalWords,null,stemming);//todo change null to description
+            if(description!=null){
+                ArrayList<String> descriptionEntities = getEntities(query);
+                descriptionWords = prepareInput(query);
+                descriptionWords.addAll(descriptionEntities);
+            }
+
+            System.out.println("FINISH PARSE query number:"+queryNumber );
+            ArrayList<String> queryAdditionalWords=new ArrayList<>();
+            ArrayList<String> descriptionAdditionalWords=new ArrayList<>();
+            if(ViewModel.isSemantic()){
+                queryAdditionalWords=getSemanticWords(queryWords);
+                if(description!=null){
+                    descriptionAdditionalWords = getSemanticWords(descriptionWords);
+                }
+            }
+
+            Rank rank = new Rank(queryWords,queryAdditionalWords,descriptionWords,descriptionAdditionalWords,stemming);//todo change null to description
             ArrayList<Integer> docs = rank.rankQuery();
             System.out.println("FINISH RANK query number:"+queryNumber );
             ArrayList<String> stringDocs=new ArrayList<>();
@@ -64,6 +78,14 @@ public class Searcher extends Thread  {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private ArrayList<String> prepareInput(String query) throws IOException {
+
+        query = removeEntities(query);
+        Parser parser = new Parser(0,query, ViewModel.getPathToData(),stemming,true);
+        parser.parse();
+        return parser.getQueryWord();
     }
 
     /**

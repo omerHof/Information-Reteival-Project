@@ -130,9 +130,10 @@ public class initPartB {
 
     private void readFileEntities(File file3) {
         String[] term;
-        ArrayList<Integer> entitiesInDoc = new ArrayList<>();
+
         try (BufferedReader reader = new BufferedReader(new FileReader(file3))) {
             while (true) {
+                ArrayList<Integer> entitiesInDoc = new ArrayList<>();
                 String line = reader.readLine();
                 if (line == null) {
                     break;
