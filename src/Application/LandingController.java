@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -30,8 +32,16 @@ public class LandingController implements Initializable {
     private TextField textFieldPosting;
 
     @FXML
+    private TextField textFieldQuery;
+
+    @FXML
     private CheckBox checkBoxStemming;
+
+    @FXML
+    private CheckBox checkBoxSemantic;
+
     private boolean stemming;
+    private boolean semantic;
     private ViewModel viewModel;
 
     /**
@@ -65,6 +75,21 @@ public class LandingController implements Initializable {
     }
 
     /**
+     * this function change the stemming value by the user choise
+     * @param actionEvent
+     * @throws IOException
+     */
+    public void setSemantic(ActionEvent actionEvent) throws IOException {
+        if (checkBoxSemantic.isSelected()){
+            checkBoxSemantic.setSelected(false);
+            semantic = false;
+        }else{
+            checkBoxSemantic.setSelected(true);
+            semantic = true;
+        }
+    }
+
+    /**
      * this function help to search the data folder
      * @param actionEvent
      * @throws IOException
@@ -91,6 +116,30 @@ public class LandingController implements Initializable {
             textFieldPosting.setText(file.getAbsolutePath());
         }
     }
+
+    /**
+     * this function help to search the query file
+     * @param actionEvent
+     * @throws IOException
+     */
+    public void browseQueryFilePressed(ActionEvent actionEvent) throws IOException {
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "text file", "txt");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(null);
+        String queryFile = "";
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            queryFile = chooser.getSelectedFile().getName();
+        }
+
+
+        if (queryFile!=null && !viewModel.validFolder(queryFile)){
+            textFieldQuery.setText(queryFile);
+        }
+    }
+
+
 
     /**
      * this function execute the engine and create all the files
@@ -123,6 +172,36 @@ public class LandingController implements Initializable {
         "Total Total processing time: "+timeElapsed+ " seconds.");
         alert.showAndWait();
     }
+
+    /**
+     * this function execute the engine and create all the files
+     * @param actionEvent
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public void runButtonPressed(ActionEvent actionEvent) throws IOException, InterruptedException {
+        if (!checkLocation()){
+            return;
+        }
+        if (checkBoxStemming.isSelected()){
+            stemming = true;
+        }
+        else{
+            stemming = false;
+        }
+
+        if(checkBoxSemantic.isSelected()){
+            semantic = true;
+        } else{
+            semantic = false;
+        }
+
+        viewModel.run(textFieldCorpus.getText(),textFieldPosting.getText(),stemming,textFieldPosting.getText(),semantic);
+    }
+
+
+
+
 
     /**
      * check if the location is valid and write a massage

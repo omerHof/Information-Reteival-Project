@@ -83,6 +83,7 @@ public class initPartB {
      */
     private void readFilePopular(File file2) {
         String[] term;
+        int lineNumber = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(file2))) {
             while (true) {
                 String line = reader.readLine();
@@ -90,6 +91,12 @@ public class initPartB {
                     break;
                 }
                 term = line.split(" ");
+                lineNumber++;
+                System.out.println(lineNumber);
+
+                if(term[0].equals("null")|| term[1].equals("null")){
+                    break;
+                }
                 this.popularwWord.put(Integer.parseInt(term[0]),Integer.parseInt(term[1]));
             }
         } catch (IOException e) {
@@ -134,7 +141,10 @@ public class initPartB {
 
                 String[] docEntities = term[1].split(",");
                 for(String str: docEntities){
-                    entitiesInDoc.add(Integer.parseInt(str));
+                    if(!str.equals("null")){
+                        entitiesInDoc.add(Integer.parseInt(str));
+                    }
+
                 }
                 this.entities.put(term[0],entitiesInDoc);
             }

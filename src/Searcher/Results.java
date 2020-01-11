@@ -48,6 +48,7 @@ public class Results {
         if(lock){
             lock=false;
             resultHashMap.put(queryNumber,resultsArray);
+            System.out.println("finish query number: "+ queryNumber);
             queriesCounter++;
             lock=true;
 
@@ -60,12 +61,14 @@ public class Results {
     private void writeToFile() throws IOException {
         FileWriter writer = new FileWriter(new File(ViewModel.getPathToOutput() +"//results.txt"));
         SortedSet<String> keys = new TreeSet<>(resultHashMap.keySet());
+        float flo = 42;
         ArrayList<String> writeResult = new ArrayList<>();
         for (String key : keys) {
             ArrayList<String> value = resultHashMap.get(key);
             for(String result: value){
-                writeResult.add(key + " 0 "+ result+ " 0");
+                writeResult.add(key + " 0 "+ result+ " 0 "+ flo+ " mt" );
             }
+
 
         }
 

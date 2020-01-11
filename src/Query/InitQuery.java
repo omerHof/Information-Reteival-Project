@@ -72,7 +72,7 @@ public class InitQuery {
             String queryNumber = element.childNode(0).toString();
             queryNumber = getNumbersFromQuery(queryNumber);
             todo.add(Executors.callable(new Searcher(queryToSend, queryNumber, stemming)));
-            //System.out.println(element.text());
+            System.out.println(queryNumber);
         }
         try {
             List<Future<Object>> answers = threadPool.invokeAll(todo);
@@ -84,7 +84,7 @@ public class InitQuery {
 
     private void search(String query) {
         this.numberOfQueries =1;
-        Searcher searcher = new Searcher(query, "0", stemming);
+        Searcher searcher = new Searcher(query, "111", stemming);
         //excute parser and stuff...
 
     }

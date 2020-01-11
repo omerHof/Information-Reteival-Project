@@ -121,11 +121,11 @@ public class ViewModel {
         //functionsPartB(pathToData,pathForDicMetadata,stemming,query);
     }
 
-    public void functionsPartB(String pathToData, String pathToOutput, boolean stemming,String queryString,boolean semantic){
+    public void run(String pathToData, String pathToOutput, boolean stemming, String queryString, boolean semantic){
         this.semantic = semantic;
         setPathToData(pathToData);
         setPathToOutput(pathToOutput);
-        String pathToData1 = pathToData+"\\test";
+        String pathToData1 = pathToData+"\\corpus";
         initPartB init = new initPartB(pathToData1,pathToOutput,stemming);
 
         InitQuery query = new InitQuery(queryString,true);

@@ -30,13 +30,12 @@ public class Searcher extends Thread  {
         this.query = query;
         this.stemming = stemming;
         this.queryNumber = queryNumber;
-        this.parse();
     }
 
     /**
      * this method parse the query
      */
-    private void parse()  {
+    public void run()  {
 
         try {
             ArrayList<String> entities = getEntities(query);
@@ -45,26 +44,19 @@ public class Searcher extends Thread  {
             parser.parse();
             ArrayList<String> words = parser.getQueryWord();
             words.addAll(entities);
-            System.out.println(words.stream().collect(Collectors.joining(" ")));
+            System.out.println("FINISH PARSE query number:"+queryNumber );
             ArrayList<String> additionalWords=new ArrayList<>();
             if(ViewModel.isSemantic()){
                 additionalWords=getSemanticWords(words);
-                for(String s:additionalWords){//todo remove
-                    System.out.println("additional word: "+s);
-                }
             }
             Rank rank = new Rank(words,additionalWords,stemming);
             ArrayList<Integer> docs = rank.rankQuery();
+            System.out.println("FINISH RANK query number:"+queryNumber );
             ArrayList<String> stringDocs=new ArrayList<>();
 
             HashMap<Integer,String> convert= initPartB.getDocNum();
             for(Integer doc:docs){
                 stringDocs.add(convert.get(doc));
-            }
-            int i=1;
-            for(String doc:stringDocs){
-                System.out.println("number"+i+": "+doc);
-                i++;
             }
             Results results = Results.getResultsInstance();
             results.insertToResultList(stringDocs,queryNumber);

@@ -74,7 +74,7 @@ public class Dictionary {
             counterLine = 0;
 
             // each x lines is one posting file
-            while (ln != null && (counterLine < 10000000)) {
+            while (ln != null && (counterLine < 1000000)) {
                 line = ln.split(" ");
                 if (line.length < 3) {
                     continue;
@@ -222,7 +222,10 @@ public class Dictionary {
             Map.Entry entity = (Map.Entry) it2.next();
             if ( ((ArrayList<Integer>) entity.getValue()).size()>1){
                 ArrayList<Integer> arr = (ArrayList<Integer>) entity.getValue();
-                pw2.write(entity.getKey()+ "|" +arrayAsString(arr)+"\r\n");
+                if(arr!=null && !arr.isEmpty()){
+                    pw2.write(entity.getKey()+ "|" +arrayAsString(arr)+"\r\n");
+                }
+
             }
         }
         pw.close();
@@ -237,9 +240,10 @@ public class Dictionary {
         if(docList==null|| docList.isEmpty()){
             return result;
         }
-        for(int doc: docList){
-            result+= doc+",";
+        for(int i=0;i<docList.size();i++){
+            result+=docList.get(i)+",";
         }
+
         return result.substring(0,result.length()-1);
     }
 
