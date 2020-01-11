@@ -71,9 +71,11 @@ public class InitQuery {
 
         for (Element element : elements) {
             String queryToSend = element.getElementsByTag("title").text();
+            String descriptionToSend = element.getElementsByTag("desc").text();
+            descriptionToSend = descriptionToSend.substring(13);
             String queryNumber = element.childNode(0).toString();
             queryNumber = getNumbersFromQuery(queryNumber);
-            todo.add(Executors.callable(new Searcher(queryToSend, queryNumber, stemming,null)));
+            todo.add(Executors.callable(new Searcher(queryToSend, queryNumber, stemming,descriptionToSend)));
             System.out.println(queryNumber);
         }
         try {
