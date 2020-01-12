@@ -74,7 +74,7 @@ public class Dictionary {
             counterLine = 0;
 
             // each x lines is one posting file
-            while (ln != null && (counterLine < 1000000)) {
+            while (ln != null && (counterLine < 20000000)) {
                 line = ln.split(" ");
                 if (line.length < 3) {
                     continue;
@@ -208,9 +208,20 @@ public class Dictionary {
         it1 = mappings4.iterator();
 
         FileWriter pw2 = new FileWriter(pathForDicMetadata+"/entities.txt", false);
-        HashMap<String, ArrayList<Integer>> entities = DominantEntity.getEntities();
-        Set<Map.Entry<String, ArrayList<Integer>>> entitiesToIterate = entities.entrySet();
-        Iterator it2 = entitiesToIterate.iterator();
+        HashMap<String, ArrayList<Integer>> entitiesTemp = DominantEntity.getEntities();
+
+        HashMap<String, String> entities = new HashMap<>();
+        Set<Map.Entry<String, ArrayList<Integer>>> entitiesToIterateTemp = entitiesTemp.entrySet();
+        Iterator it2 = entitiesToIterateTemp.iterator();
+        while (it2.hasNext()){
+            Map.Entry pair2 = (Map.Entry) it2.next();
+            if ( ((ArrayList<Integer>) pair2.getValue()).size()>1){
+                ArrayList<Integer> arr = (ArrayList<Integer>) pair2.getValue();
+                if(arr!=null && !arr.isEmpty()){
+                    entities.put((String) pair2.getKey(),arrayAsString(arr));
+                }
+            }
+        }
 
         //write the files of the doc-amonunt of the most popular word doc and doc-amount of unique words
         while(it.hasNext() && it1.hasNext()){
@@ -225,16 +236,14 @@ public class Dictionary {
         pw1.close();
 
 
+        Set<Map.Entry<String, String>> entitiesToIterate = entities.entrySet();
+        it2 = entitiesToIterate.iterator();
+
         while(it2.hasNext()){
             Map.Entry entity = (Map.Entry) it2.next();
-            if ( ((ArrayList<Integer>) entity.getValue()).size()>1){
-                ArrayList<Integer> arr = (ArrayList<Integer>) entity.getValue();
-                if(arr!=null && !arr.isEmpty()){
-                    pw2.write(entity.getKey()+ "|" +arrayAsString(arr)+"\r\n");
-                }
-
-            }
+            pw2.write(entity.getKey()+ " " +  entity.getValue()+"\r\n");
         }
+
         pw2.close();
 
         pw = new FileWriter(pathForDicMetadata+"/docNum.txt", false);

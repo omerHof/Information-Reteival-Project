@@ -51,8 +51,8 @@ public class initPartB {
             //String pathWordInDoc =pathToOutput + "/postingStemming/Dictionary Metadata/termsInDoc.txt";
             String pathPopular =pathToOutput + "\\postingStemming\\Dictionary Metadata\\amountOfPopularInDoc.txt";
             String pathEntites =pathToOutput + "\\postingStemming\\Dictionary Metadata\\entities.txt";
-            String pathDocNum = pathToOutput+ "\\postingStemming\\Dictionary Metadata\\docNum";
-            String pathTotalWords = pathToOutput+"\\postingStemming\\Dictionary Metadata\\TotalWordsInDoc";
+            String pathDocNum = pathToOutput+ "\\postingStemming\\Dictionary Metadata\\docNum.txt";
+            String pathTotalWords = pathToOutput+"\\postingStemming\\Dictionary Metadata\\TotalWordsInDoc.txt";
 
             if (validFile(pathDictionary)&& validFile(pathPopular)){
                 File file = new File(pathDictionary);

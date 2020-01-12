@@ -163,7 +163,7 @@ public class LandingController implements Initializable {
      * @throws InterruptedException
      */
     public void excuteButtonPressed(ActionEvent actionEvent) throws IOException, InterruptedException {
-        if (!checkLocation()){
+        if (!checkOutputLocation()|| !checkInputLocation()){
             return;
         }
         if (checkBoxStemming.isSelected()){
@@ -195,7 +195,7 @@ public class LandingController implements Initializable {
      * @throws InterruptedException
      */
     public void runButtonPressed(ActionEvent actionEvent) throws IOException, InterruptedException {
-        if (!checkLocation()){
+        if (!checkOutputLocation()|| !checkQueryLocation()){
             return;
         }
         if (checkBoxStemming.isSelected()){
@@ -211,7 +211,7 @@ public class LandingController implements Initializable {
             semantic = false;
         }
 
-        viewModel.run(textFieldCorpus.getText(),textFieldPosting.getText(),stemming,textFieldQuery.getText(),semantic);
+        viewModel.run(textFieldPosting.getText(),stemming,textFieldQuery.getText(),semantic);
 
         ArrayList <Pair<String,String>> results = viewModel.getResults();
 
@@ -379,7 +379,7 @@ public class LandingController implements Initializable {
      * check if the location is valid and write a massage
      * @return true/false
      */
-    private boolean checkLocation() {
+    private boolean checkInputLocation() {
         //if the data folder path is invalid
         if (!viewModel.validFolder(textFieldCorpus.getText())){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -389,6 +389,12 @@ public class LandingController implements Initializable {
             alert.showAndWait();
             return false;
         }
+
+        //the paths are valid
+        return true;
+    }
+
+    private boolean checkOutputLocation(){
         //if the posting folder path is invalid
         if (!viewModel.validFolder(textFieldPosting.getText())){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -398,9 +404,27 @@ public class LandingController implements Initializable {
             alert.showAndWait();
             return false;
         }
-        //the paths are valid
         return true;
     }
+
+    private boolean checkQueryLocation(){
+        //if the posting folder path is invalid
+        if (textFieldQuery.getText()==null|| textFieldQuery.getText().equals("")){
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Look, an Error Dialog");
+            alert.setContentText("Ooops, there was an error! You didn't enter query properly");
+            alert.showAndWait();
+            return false;
+        }
+        System.out.println(textFieldQuery.getText());
+        return true;
+    }
+
+
+
+
 
     /**
      * this function reset the match folder (Stemming/without Stemming)
@@ -408,7 +432,7 @@ public class LandingController implements Initializable {
      * @throws IOException
      */
     public void resetButtonPressed(ActionEvent actionEvent) throws IOException {
-        if (!checkLocation()){
+        if (!checkOutputLocation()){
             return;
         }
         if (viewModel.reset(textFieldPosting.getText(),stemming)){
@@ -479,7 +503,7 @@ public class LandingController implements Initializable {
      * @throws IOException
      */
     public void LoadDicFromDiscButtonPressed(ActionEvent actionEvent) throws IOException {
-        if (!checkLocation()){
+        if (!checkOutputLocation()|| !checkInputLocation()){
             return;
         }
         //if the load successful

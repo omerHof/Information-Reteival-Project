@@ -128,23 +128,23 @@ public class ViewModel {
         //functionsPartB(pathToData,pathForDicMetadata,stemming,query);
     }
 
-    public void run(String pathToData, String pathToOutput, boolean stemming, String queryString, boolean semantic){
+    public void run(String pathToOutput, boolean stemming, String queryString, boolean semantic){
         this.semantic = semantic;
         this.stemming = stemming;
-        this.pathToData = pathToData;
         this.pathToOutput = pathToOutput;
         this.query = queryString;
-        setPathToData(pathToData);
+
         setPathToOutput(pathToOutput);
         String pathToData1 = pathToData+"\\corpus";
         initPartB init = new initPartB(pathToData1,pathToOutput,stemming);
         DominantEntity dominantEntity= DominantEntity.getEntityListInstance(initPartB.getEntities());
-        dominantEntity.getDominantEntities(3);//todo
-        InitQuery query = new InitQuery(queryString,false);
+
+        InitQuery query = new InitQuery(queryString,stemming);
         query.initSearcher();
 
         Results results1 = Results.getResultsInstance();
         results =  results1.getResultHashMap();
+
 
 
 

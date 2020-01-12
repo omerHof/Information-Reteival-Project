@@ -108,6 +108,7 @@ public class InitQuery {
     private void search(String query) {
         this.numberOfQueries =1;
         Searcher searcher = new Searcher(query, "111", stemming,null);
+        searcher.run();
 
 
     }
