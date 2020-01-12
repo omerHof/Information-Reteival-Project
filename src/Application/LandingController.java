@@ -1,6 +1,5 @@
 package Application;
 
-import Query.DominantEntity;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -18,7 +17,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -33,7 +31,6 @@ import javafx.scene.text.Text;
 import javafx.scene.paint.Color;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -163,7 +160,7 @@ public class LandingController implements Initializable {
      * @throws InterruptedException
      */
     public void excuteButtonPressed(ActionEvent actionEvent) throws IOException, InterruptedException {
-        if (!checkOutputLocation()|| !checkInputLocation()){
+        if (!checkOutputLocation("EXCUTE")|| !checkInputLocation()){
             return;
         }
         if (checkBoxStemming.isSelected()){
@@ -195,15 +192,17 @@ public class LandingController implements Initializable {
      * @throws InterruptedException
      */
     public void runButtonPressed(ActionEvent actionEvent) throws IOException, InterruptedException {
-        if (!checkOutputLocation()|| !checkQueryLocation()){
-            return;
-        }
         if (checkBoxStemming.isSelected()){
             stemming = true;
         }
         else{
             stemming = false;
         }
+
+        if (!checkOutputLocation("Run")|| !checkQueryLocation()){
+            return;
+        }
+
 
         if(checkBoxSemantic.isSelected()){
             semantic = true;
@@ -394,16 +393,28 @@ public class LandingController implements Initializable {
         return true;
     }
 
-    private boolean checkOutputLocation(){
+    private boolean checkOutputLocation(String run){
         //if the posting folder path is invalid
-        if (!viewModel.validFolder(textFieldPosting.getText())){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Dialog");
-            alert.setHeaderText("Look, an Error Dialog");
-            alert.setContentText("Ooops, there was an error! You didn't enter posting folder location");
-            alert.showAndWait();
-            return false;
+        if(run.equals("EXCUTE")){
+            if (!viewModel.validFolder(textFieldPosting.getText())){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialog");
+                alert.setHeaderText("Look, an Error Dialog");
+                alert.setContentText(" there was an error! Could not find posting folder");
+                alert.showAndWait();
+                return false;
+            }
+        }else{
+            if (!viewModel.validFolderForQueryOutput(textFieldPosting.getText(),stemming)){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialog");
+                alert.setHeaderText("Look, an Error Dialog");
+                alert.setContentText(" there was an error! posting folder not exist");
+                alert.showAndWait();
+                return false;
+            }
         }
+
         return true;
     }
 
@@ -432,7 +443,7 @@ public class LandingController implements Initializable {
      * @throws IOException
      */
     public void resetButtonPressed(ActionEvent actionEvent) throws IOException {
-        if (!checkOutputLocation()){
+        if (!checkOutputLocation("Run")){
             return;
         }
         if (viewModel.reset(textFieldPosting.getText(),stemming)){
@@ -503,7 +514,7 @@ public class LandingController implements Initializable {
      * @throws IOException
      */
     public void LoadDicFromDiscButtonPressed(ActionEvent actionEvent) throws IOException {
-        if (!checkOutputLocation()|| !checkInputLocation()){
+        if (!checkOutputLocation("Run")|| !checkInputLocation()){
             return;
         }
         //if the load successful

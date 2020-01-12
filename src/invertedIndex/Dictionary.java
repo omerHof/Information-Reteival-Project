@@ -241,7 +241,7 @@ public class Dictionary {
 
         while(it2.hasNext()){
             Map.Entry entity = (Map.Entry) it2.next();
-            pw2.write(entity.getKey()+ " " +  entity.getValue()+"\r\n");
+            pw2.write(entity.getKey()+ "|" +  entity.getValue()+"\r\n");
         }
 
         pw2.close();

@@ -244,6 +244,26 @@ public class ViewModel {
      * @return
      */
     public boolean validFolder(String folderLocation) {
+
+        File f = new File(folderLocation);
+        if (f.exists() && f.isDirectory()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * this function check if a string of path of folder is exist and valid
+     * @param folderLocation
+     * @return
+     */
+    public boolean validFolderForQueryOutput(String folderLocation, boolean stemming) {
+        this.stemming = stemming;
+        if(stemming){
+            folderLocation = folderLocation+"\\postingStemming";
+        }else{
+            folderLocation = folderLocation+"\\postingwithoutStemming";
+        }
         File f = new File(folderLocation);
         if (f.exists() && f.isDirectory()) {
             return true;
