@@ -320,7 +320,7 @@ public class LandingController implements Initializable {
                     alert.setContentText("First entity: "+dominantEntities.get(0) +System.lineSeparator()+
                                         "Second entity: "+ dominantEntities.get(1) +System.lineSeparator()+
                                         "Third entity: "+ dominantEntities.get(2) +System.lineSeparator()+
-                                        "Firth entity: "+ dominantEntities.get(3) +System.lineSeparator()+
+                                        "fourth entity: "+ dominantEntities.get(3) +System.lineSeparator()+
                                         "Fifth entity: "+ dominantEntities.get(4) +System.lineSeparator()
                     );
                     alert.showAndWait();

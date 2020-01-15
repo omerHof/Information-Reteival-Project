@@ -108,7 +108,7 @@ public class initPartB {
                 }
                 term = line.split(" ");
                 lineNumber++;
-                System.out.println(lineNumber);
+
 
                 if(term[0].equals("null")|| term[1].equals("null")){
                     break;
@@ -186,7 +186,7 @@ public class initPartB {
                 }
                 term = line.split(" ");
                 lineNumber++;
-                System.out.println(lineNumber);
+
 
                 if (term[0].equals("null") || term[1].equals("null")) {
                     break;
@@ -213,7 +213,7 @@ public class initPartB {
                 }
                 term = line.split(" ");
                 lineNumber++;
-                System.out.println(lineNumber);
+
 
                 if(term[0].equals("null")|| term[1].equals("null")){
                     break;

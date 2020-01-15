@@ -10,7 +10,9 @@ import org.json.*;
 public class Semantic {
 
     public Semantic() {
+         /*
         try {
+
             InputStream in = Semantic.class.getResourceAsStream("word2vec.txt");
             BufferedReader bf = new BufferedReader(new InputStreamReader(in));
             File file = new File(System.getProperty("user.dir") + "\\word2vec.txt");
@@ -32,7 +34,12 @@ public class Semantic {
             e.printStackTrace();
 
         }
+
+          */
+
     }
+
+
 
     /**
      * use open source- give a word and get K similar words
