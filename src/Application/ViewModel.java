@@ -130,6 +130,7 @@ public class ViewModel {
     }
 
     public void run(String pathToOutput, boolean stemming, String queryString, boolean semantic){
+        System.out.println("Start initialize part B");;
         this.semantic = semantic;
         this.stemming = stemming;
         this.pathToOutput = pathToOutput;
