@@ -42,6 +42,7 @@ public class Searcher extends Thread  {
         try {
             ArrayList<String> queryWords = new ArrayList<>();
             ArrayList<String> descriptionWords = new ArrayList<>();
+            long startTime = System.nanoTime();
             if(query!=null){
                 ArrayList<String> queryEntities = getEntities(query);
                 queryWords = prepareInput(query);
@@ -74,7 +75,9 @@ public class Searcher extends Thread  {
 
             Rank rank = new Rank(queryWords,queryAdditionalWords,descriptionWords,descriptionAdditionalWords,stemming);//todo change null to description
             ArrayList<Integer> docs = rank.rankQuery();
-            System.out.println("FINISH RANK query number:" + queryNumber);
+            long endTime = System.nanoTime();
+            long timeElapsed = (endTime - startTime)/1000000000;
+            System.out.println("FINISH RANK query number:" + queryNumber+ " Time: "+ timeElapsed + " seconds.");
             ArrayList<String> stringDocs = new ArrayList<>();
 
             HashMap<Integer, String> convert = initPartB.getDocNum();
@@ -113,6 +116,7 @@ public class Searcher extends Thread  {
         ArrayList<String> result= new ArrayList<>();
         try {
             for (String word : words) {
+                //Semantic semantic = new Semantic();
                 String[] semanticWords = Semantic.getSemanticWords(word);
                 ArrayList<String> wordList = new ArrayList(Arrays.asList(semanticWords));
                 wordList.remove(0);

@@ -37,6 +37,7 @@ public class InitQuery {
         this.query = query;
         this.stemming = stemming;
 
+
     }
 
     /**
@@ -67,7 +68,7 @@ public class InitQuery {
         Elements elements = html.getElementsByTag("num");
         this.numberOfQueries = elements.size();
 
-        ExecutorService threadPool = newFixedThreadPool(1);
+        ExecutorService threadPool = newFixedThreadPool(8);
         List<Callable<Object>> todo = new ArrayList<Callable<Object>>();
 
 

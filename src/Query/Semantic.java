@@ -1,13 +1,38 @@
 package Query;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.List;
 import java.util.Scanner;
 
+import com.medallia.word2vec.Searcher;
 import com.medallia.word2vec.Word2VecModel;
 import org.json.*;
 public class Semantic {
+
+    public Semantic() {
+        try {
+            InputStream in = Semantic.class.getResourceAsStream("word2vec.txt");
+            BufferedReader bf = new BufferedReader(new InputStreamReader(in));
+            File file = new File(System.getProperty("user.dir") + "\\word2vec.txt");
+            OutputStream outputStream = new FileOutputStream(file);
+            String line = "";
+
+
+            if (file.exists()) {
+                file.delete();
+            }
+
+            while ((line = bf.readLine()) != null) {
+                outputStream.write((line + "\n").getBytes());
+            }
+            in.close();
+            outputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
 
     /**
      * use open source- give a word and get K similar words
@@ -18,7 +43,10 @@ public class Semantic {
         int k=5;
         String[] result= new String[k];
         try{
-            Word2VecModel model = Word2VecModel.fromTextFile(new File("word2vec.c.output.model.txt"));
+            File file2 = new File(System.getProperty("user.dir")+"\\word2vec.txt");
+
+            Word2VecModel model = Word2VecModel.fromTextFile(file2);
+
             com.medallia.word2vec.Searcher semanticSearcher = model.forSearch();
             int numOfResultInList = k;
 
@@ -29,12 +57,8 @@ public class Semantic {
                 i++;
 
             }
-
-
-
-        }catch (IOException e){
-            e.printStackTrace();
-        }catch (com.medallia.word2vec.Searcher.UnknownWordException e){
+            return result;
+        }catch (Searcher.UnknownWordException | IOException e){
 
         }
         return result;

@@ -3,6 +3,7 @@ package Application;
 import Parse.Parser;
 import Query.DominantEntity;
 import Query.InitQuery;
+import Query.Semantic;
 import Query.initPartB;
 import ReadFile.InitProgram;
 import Searcher.Results;
@@ -138,7 +139,9 @@ public class ViewModel {
         String pathToData1 = pathToData+"\\corpus";
         initPartB init = new initPartB(pathToData1,pathToOutput,stemming);
         DominantEntity dominantEntity= DominantEntity.getEntityListInstance(initPartB.getEntities());
-
+        if(semantic){
+            Semantic semantic1 = new Semantic();
+        }
         InitQuery query = new InitQuery(queryString,stemming);
         query.initSearcher();
 

@@ -18,12 +18,12 @@
                <font>
                   <Font name="System Bold" size="22.0" />
                </font></Label>
-            <Button layoutX="331.0" layoutY="367.0" mnemonicParsing="false" onAction="#excuteButtonPressed" prefHeight="78.0" prefWidth="145.0" text="EXCUTE" />
-            <Button layoutX="538.0" layoutY="503.0" mnemonicParsing="false" onAction="#showDictionaryButtonPressed" prefHeight="46.0" prefWidth="204.0" text="SHOW DICTIONARY" />
+            <Button layoutX="331.0" layoutY="419.0" mnemonicParsing="false" onAction="#excuteButtonPressed" prefHeight="78.0" prefWidth="145.0" text="EXCUTE" />
+            <Button layoutX="538.0" layoutY="555.0" mnemonicParsing="false" onAction="#showDictionaryButtonPressed" prefHeight="46.0" prefWidth="204.0" text="SHOW DICTIONARY" />
             <Button layoutX="652.0" layoutY="206.0" mnemonicParsing="false" onAction="#browsePostingFolderPressed" text="BROWSE" />
-            <Button layoutX="660.0" layoutY="389.0" mnemonicParsing="false" onAction="#resetButtonPressed" prefHeight="46.0" prefWidth="81.0" text="RESET" />
+            <Button layoutX="660.0" layoutY="441.0" mnemonicParsing="false" onAction="#resetButtonPressed" prefHeight="46.0" prefWidth="81.0" text="RESET" />
             <Button layoutX="652.0" layoutY="112.0" mnemonicParsing="false" onAction="#browseCorpusFolderPressed" text="BROWSE" />
-            <Button layoutX="48.0" layoutY="503.0" mnemonicParsing="false" onAction="#LoadDicFromDiscButtonPressed" prefHeight="46.0" prefWidth="283.0" text="LOAD DICTIONARY TO DISC" />
+            <Button layoutX="48.0" layoutY="555.0" mnemonicParsing="false" onAction="#LoadDicFromDiscButtonPressed" prefHeight="46.0" prefWidth="283.0" text="LOAD DICTIONARY TO DISC" />
             <Label layoutX="34.0" layoutY="78.0" text="CHOOSE DATA FOLDER">
                <font>
                   <Font size="17.0" />
@@ -41,9 +41,9 @@
             </Label>
             <TextField fx:id="textFieldQuery" layoutX="31.0" layoutY="294.0" prefHeight="26.0" prefWidth="590.0" />
             <Button layoutX="655.0" layoutY="294.0" mnemonicParsing="false" onAction="#browseQueryFilePressed" text="BROWSE" />
-            <Button layoutX="735.0" layoutY="296.0" mnemonicParsing="false" onAction="#runButtonPressed" prefHeight="26.0" prefWidth="90.0" text="RUN" />
-            <CheckBox fx:id="checkBoxStemming" layoutX="34.0" layoutY="349.0" mnemonicParsing="false" onAction="#setStemming" text="STEMMING" />
-            <CheckBox fx:id="checkBoxSemantic" layoutX="37.0" layoutY="445.0" mnemonicParsing="false" onAction="#setSemantic" text="SEMANTIC" />
+            <Button layoutX="753.0" layoutY="295.0" mnemonicParsing="false" onAction="#runButtonPressed" prefHeight="26.0" prefWidth="63.0" text="RUN" />
+            <CheckBox fx:id="checkBoxStemming" layoutX="34.0" layoutY="401.0" mnemonicParsing="false" onAction="#setStemming" text="STEMMING" />
+            <CheckBox fx:id="checkBoxSemantic" layoutX="36.0" layoutY="455.0" mnemonicParsing="false" onAction="#setSemantic" text="SEMANTIC" />
          </children>
       </AnchorPane>
    </children>
